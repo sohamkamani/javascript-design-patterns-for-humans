@@ -123,60 +123,59 @@ Wikipedia says
  
 Taking our hiring manager example above. First of all we have an interviewer interface and some implementations for it
 
-```php
-interface Interviewer {
-    public function askQuestions();
+```js
+/*
+Interviewer interface
+
+askQuestions()
+*/
+
+class Developer {
+  askQuestions() {
+    console.log('Asking about design patterns!')
+  }
 }
 
-class Developer implements Interviewer {
-    public function askQuestions() {
-        echo 'Asking about design patterns!';
-    }
-}
-
-class CommunityExecutive implements Interviewer {
-    public function askQuestions() {
-        echo 'Asking about community building';
-    }
+class CommunityExecutive {
+  askQuestions() {
+    console.log('Asking about community building')
+  }
 }
 ```
 
 Now let us create our `HiringManager`
 
-```php
-abstract class HiringManager {
-    
-    // Factory method
-    abstract public function makeInterviewer() : Interviewer;
-    
-    public function takeInterview() {
-        $interviewer = $this->makeInterviewer();
-        $interviewer->askQuestions();
+```js
+class HiringManager {
+        
+    takeInterview() {
+        const interviewer = this.makeInterviewer()
+        interviewer.askQuestions()
     }
 }
 ```
 Now any child can extend it and provide the required interviewer
-```php
+```js
 class DevelopmentManager extends HiringManager {
-    public function makeInterviewer() : Interviewer {
+    makeInterviewer() {
         return new Developer();
     }
 }
 
 class MarketingManager extends HiringManager {
-    public function makeInterviewer() : Interviewer {
+    makeInterviewer() {
         return new CommunityExecutive();
     }
 }
 ```
 and then it can be used as
 
-```php
-$devManager = new DevelopmentManager();
-$devManager->takeInterview(); // Output: Asking about design patterns
+```js
+const devManager = new DevelopmentManager()
+devManager.takeInterview() // Output: Asking about design patterns
 
-$marketingManager = new MarketingManager();
-$marketingManager->takeInterview(); // Output: Asking about community building.
+const marketingManager = new MarketingManager()
+marketingManager.takeInterview() // Output: Asking about community buildng.
 ```
 
 **When to use?**
