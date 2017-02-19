@@ -64,43 +64,43 @@ Wikipedia says
 **Programmatic Example**
 
 First of all we have a door interface and the implementation
-```php
-interface Door {
-    public function getWidth() : float;
-    public function getHeight() : float;
-}
+```js
+/*
+Door
 
-class WoodenDoor implements Door {
-    protected $width;
-    protected $height;
+getWidth()
+getHeight()
 
-    public function __construct(float $width, float $height) {
-        $this->width = $width;
-        $this->height = $height;
-    }
-    
-    public function getWidth() : float {
-        return $this->width;
-    }
-    
-    public function getHeight() : float {
-        return $this->height;
-    }
+*/
+
+class WoodenDoor {
+  constructor(width, height){
+    this.width = width
+    this.height = height
+  }
+
+  getWidth(){
+    return this.width
+  }
+
+  getHeight(){
+    return this.height
+  }
 }
-````
+```
 Then we have our door factory that makes the door and returns it
-```php
-class DoorFactory {
-   public static function makeDoor($width, $height) : Door {
-       return new WoodenDoor($width, $height);
-   }
+
+```js
+const DoorFactory = {
+  makeDoor : (width, height) => new WoodenDoor(width, height)
 }
 ```
 And then it can be used as
-```php
-$door = DoorFactory::makeDoor(100, 200);
-echo 'Width: ' . $door->getWidth();
-echo 'Height: ' . $door->getHeight();
+
+```js
+const door = DoorFactory.makeDoor(100, 200)
+console.log('Width:', door.getWidth())
+console.log('Height:', door.getHeight())
 ```
 
 **When to Use?**
