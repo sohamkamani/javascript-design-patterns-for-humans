@@ -12,9 +12,9 @@ A topic that can easily make anyone's mind wobble. Here I try to make them stick
 🚀 Introduction
 =================
 
-Design patterns are solutions to recurring problems; **guidelines on how to tackle certain problems**. They are not classes, packages or libraries that you can plug into your application and wait for the magic to happen. These are, rather, guidelines on how to tackle certain problems in certain situations. 
+Design patterns are solutions to recurring problems **guidelines on how to tackle certain problems**. They are not classes, packages or libraries that you can plug into your application and wait for the magic to happen. These are, rather, guidelines on how to tackle certain problems in certain situations. 
 
-> Design patterns solutions to recurring problems; guidelines on how to tackle certain problems
+> Design patterns solutions to recurring problems guidelines on how to tackle certain problems
 
 Wikipedia describes them as
 
@@ -23,8 +23,8 @@ Wikipedia describes them as
 ⚠️ Be Careful
 -----------------
 - Design patterns are not a silver bullet to all your problems.
-- Do not try to force them; bad things are supposed to happen, if done so. Keep in mind that design patterns are solutions **to** problems, not solutions **finding** problems; so don't overthink.
-- If used in a correct place in a correct manner, they can prove to be a savior; or else they can result in a horrible mess of a code.
+- Do not try to force them bad things are supposed to happen, if done so. Keep in mind that design patterns are solutions **to** problems, not solutions **finding** problems so don't overthink.
+- If used in a correct place in a correct manner, they can prove to be a savior or else they can result in a horrible mess of a code.
 
 Types of Design Patterns
 -----------------
@@ -158,13 +158,13 @@ Now any child can extend it and provide the required interviewer
 ```js
 class DevelopmentManager extends HiringManager {
     makeInterviewer() {
-        return new Developer();
+        return new Developer()
     }
 }
 
 class MarketingManager extends HiringManager {
     makeInterviewer() {
-        return new CommunityExecutive();
+        return new CommunityExecutive()
     }
 }
 ```
@@ -189,7 +189,7 @@ Real world example
 > Extending our door example from Simple Factory. Based on your needs you might get a wooden door from a wooden door shop, iron door from an iron shop or a PVC door from the relevant shop. Plus you might need a guy with different kind of specialities to fit the door, for example a carpenter for wooden door, welder for iron door etc. As you can see there is a dependency between the doors now, wooden door needs carpenter, iron door needs a welder etc.
 
 In plain words
-> A factory of factories; a factory that groups the individual but related/dependent factories together without specifying their concrete classes. 
+> A factory of factories a factory that groups the individual but related/dependent factories together without specifying their concrete classes. 
   
 Wikipedia says
 > The abstract factory pattern provides a way to encapsulate a group of individual factories that have a common theme without specifying their concrete classes
@@ -299,7 +299,7 @@ When there are interrelated dependencies with not-that-simple creation logic inv
 👷 Builder
 --------------------------------------------
 Real world example
-> Imagine you are at Hardee's and you order a specific deal, lets say, "Big Hardee" and they hand it over to you without *any questions*; this is the example of simple factory. But there are cases when the creation logic might involve more steps. For example you want a customized Subway deal, you have several options in how your burger is made e.g what bread do you want? what types of sauces would you like? What cheese would you want? etc. In such cases builder pattern comes to the rescue.
+> Imagine you are at Hardee's and you order a specific deal, lets say, "Big Hardee" and they hand it over to you without *any questions* this is the example of simple factory. But there are cases when the creation logic might involve more steps. For example you want a customized Subway deal, you have several options in how your burger is made e.g what bread do you want? what types of sauces would you like? What cheese would you want? etc. In such cases builder pattern comes to the rescue.
 
 In plain words
 > Allows you to create different flavors of an object while avoiding constructor pollution. Useful when there could be several flavors of an object. Or when there are a lot of steps involved in creation of an object.
@@ -309,152 +309,78 @@ Wikipedia says
 
 Having said that let me add a bit about what telescoping constructor anti-pattern is. At one point or the other we have all seen a constructor like below:
  
-```php
-public function __construct($size, $cheese = true, $pepperoni = true, $tomato = false, $lettuce = true) {
+```js
+constructor(size, cheese = true, pepperoni = true, tomato = false, lettuce = true) {
+    // ... 
 }
 ```
 
-As you can see; the number of constructor parameters can quickly get out of hand and it might become difficult to understand the arrangement of parameters. Plus this parameter list could keep on growing if you would want to add more options in future. This is called telescoping constructor anti-pattern.
+As you can see the number of constructor parameters can quickly get out of hand and it might become difficult to understand the arrangement of parameters. Plus this parameter list could keep on growing if you would want to add more options in future. This is called telescoping constructor anti-pattern.
 
 **Programmatic Example**
 
 The sane alternative is to use the builder pattern. First of all we have our burger that we want to make
 
-```php
+```js
 class Burger {
-    protected $size;
-
-    protected $cheeze = false;
-    protected $pepperoni = false;
-    protected $lettuce = false;
-    protected $tomato = false;
-    
-    public function __construct(BurgerBuilder $builder) {
-        $this->size = $builder->size;
-        $this->cheeze = $builder->cheeze;
-        $this->pepperoni = $builder->pepperoni;
-        $this->lettuce = $builder->lettuce;
-        $this->tomato = $builder->tomato;
+    constructor(builder) {
+        this.size = builder.size
+        this.cheeze = builder.cheeze || false
+        this.pepperoni = builder.pepperoni || false
+        this.lettuce = builder.lettuce || false
+        this.tomato = builder.tomato || false
     }
 }
 ```
 
 And then we have the builder
 
-```php
+```js
 class BurgerBuilder {
-    public $size;
 
-    public $cheeze = false;
-    public $pepperoni = false;
-    public $lettuce = false;
-    public $tomato = false;
+    constructor(size) {
+        this.size = size
+    }
 
-    public function __construct(int $size) {
-        $this->size = $size;
+    addPepperoni() {
+        this.pepperoni = true
+        return this
     }
-    
-    public function addPepperoni() {
-        $this->pepperoni = true;
-        return $this;
+
+    addLettuce() {
+        this.lettuce = true
+        return this
     }
-    
-    public function addLettuce() {
-        $this->lettuce = true;
-        return $this;
+
+    addCheeze() {
+        this.cheeze = true
+        return this
     }
-    
-    public function addCheeze() {
-        $this->cheeze = true;
-        return $this;
+
+    addTomato() {
+        this.tomato = true
+        return this
     }
-    
-    public function addTomato() {
-        $this->tomato = true;
-        return $this;
-    }
-    
-    public function build() : Burger {
-        return new Burger($this);
+
+    build() {
+        return new Burger(this)
     }
 }
 ```
 And then it can be used as:
 
-```php
-$burger = (new BurgerBuilder(14))
-                    ->addPepperoni();
-                    ->addLettuce();
-                    ->addTomato();
-                    ->build();
+```js
+const burger = (new BurgerBuilder(14))
+    .addPepperoni()
+    .addLettuce()
+    .addTomato()
+    .build()
 ```
 
 **When to use?**
 
-When there could be several flavors of an object and to avoid the constructor telescoping. The key difference from the factory pattern is that; factory pattern is to be used when the creation is a one step process while builder pattern is to be used when the creation is a multi step process.
+When there could be several flavors of an object and to avoid the constructor telescoping. The key difference from the factory pattern is that factory pattern is to be used when the creation is a one step process while builder pattern is to be used when the creation is a multi step process.
 
-🐑 Prototype
-------------
-Real world example
-> Remember dolly? The sheep that was cloned! Lets not get into the details but the key point here is that it is all about cloning
-
-In plain words
-> Create object based on an existing object through cloning.
-
-Wikipedia says
-> The prototype pattern is a creational design pattern in software development. It is used when the type of objects to create is determined by a prototypical instance, which is cloned to produce new objects.
-
-In short, it allows you to create a copy of an existing object and modify it to your needs, instead of going through the trouble of creating an object from scratch and setting it up.
-
-**Programmatic Example**
-
-In PHP, it can be easily done using `clone`
-  
-```php
-class Sheep {
-    protected $name;
-    protected $category;
-
-    public function __construct(string $name, string $category = 'Mountain Sheep') {
-        $this->name = $name;
-        $this->category = $category;
-    }
-    
-    public function setName(string $name) {
-        $this->name = $name;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function setCategory(string $category) {
-        $this->category = $category;
-    }
-
-    public function getCategory() {
-        return $this->category;
-    }
-}
-```
-Then it can be cloned like below
-```php
-$original = new Sheep('Jolly');
-echo $original->getName(); // Jolly
-echo $original->getCategory(); // Mountain Sheep
-
-// Clone and modify what is required
-$cloned = clone $original;
-$cloned->setName('Dolly');
-echo $cloned->getName(); // Dolly
-echo $cloned->getCategory(); // Mountain sheep
-```
-
-Also you could use the magic method `__clone` to modify the cloning behavior.
-
-**When to use?**
-
-When an object is required that is similar to existing object or when the creation would be expensive as compared to cloning.
 
 💍 Singleton
 ------------
@@ -471,34 +397,27 @@ Singleton pattern is actually considered an anti-pattern and overuse of it shoul
 
 **Programmatic Example**
 
-To create a singleton, make the constructor private, disable cloning, disable extension and create a static variable to house the instance
-```php
-final class President {
-    private static $instance;
+In javascript, singletons can be implemented using the module pattern. Private variables and functions are hidden in a function closure, and public methods are selectively exposed.
+```js
+const president = (function(){
+    const presidentsPrivateInformation = 'Super private'
 
-    private function __construct() {
-        // Hide the constructor
+    const name = 'Turd Sandwich'
+
+    const getName = () => name
+
+    return {
+        getName
     }
-    
-    public static function getInstance() : President {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        
-        return self::$instance;
-    }
-    
-    private function __clone() {
-        // Disable cloning
-    }
-}
+}())
 ```
-Then in order to use
-```php
-$president1 = President::getInstance();
-$president2 = President::getInstance();
 
-var_dump($president1 === $president2); // true
+Here, `presidentsPrivateInformation` and `name` are kept private. However, `name` can be accessed with the exposed `president.getName` method.
+
+```js
+president.getName() // Outputs 'Turd Sandwich'
+president.name // Outputs undefined
+president.presidentsPrivateInformation // Outputs undefined
 ```
 
 Structural Design Patterns
@@ -521,7 +440,7 @@ Wikipedia says
 -------
 Real world example
 > Consider that you have some pictures in your memory card and you need to transfer them to your computer. In order to transfer them you need some kind of adapter that is compatible with your computer ports so that you can attach memory card to your computer. In this case card reader is an adapter.
-> Another example would be the famous power adapter; a three legged plug can't be connected to a two pronged outlet, it needs to use a power adapter that makes it compatible with the two pronged outlet.
+> Another example would be the famous power adapter a three legged plug can't be connected to a two pronged outlet, it needs to use a power adapter that makes it compatible with the two pronged outlet.
 > Yet another example would be a translator translating words spoken by one person to another
 
 In plain words
@@ -536,56 +455,61 @@ Consider a game where there is a hunter and he hunts lions.
 
 First we have an interface `Lion` that all types of lions have to implement
 
-```php
-interface Lion {
-    public function roar();
+```js
+/*
+Lion interface :
+
+roar()
+*/
+
+class AfricanLion  {
+    roar() {}
 }
 
-class AfricanLion implements Lion {
-    public function roar() {}
-}
-
-class AsianLion implements Lion {
-    public function roar() {}
+class AsianLion  {
+    roar() {}
 }
 ```
 And hunter expects any implementation of `Lion` interface to hunt.
-```php
+```js
 class Hunter {
-    public function hunt(Lion $lion) {
+    hunt(lion) {
+        // ... some code before
+        lion.roar()
+        //... some code after
     }
 }
 ```
 
 Now let's say we have to add a `WildDog` in our game so that hunter can hunt that also. But we can't do that directly because dog has a different interface. To make it compatible for our hunter, we will have to create an adapter that is compatible
  
-```php
+```js
 // This needs to be added to the game
 class WildDog {
-    public function bark() {}
+    bark() {
+    }
 }
 
 // Adapter around wild dog to make it compatible with our game
-class WildDogAdapter implements Lion {
-    protected $dog;
+class WildDogAdapter {
 
-    public function __construct(WildDog $dog) {
-        $this->dog = $dog;
+    constructor(dog) {
+        this.dog = dog;
     }
     
-    public function roar() {
-        $this->dog->bark();
+    roar() {
+        this.dog.bark();
     }
 }
 ```
 And now the `WildDog` can be used in our game using `WildDogAdapter`.
 
-```php
-$wildDog = new WildDog();
-$wildDogAdapter = new WildDogAdapter($wildDog);
+```js
+wildDog = new WildDog()
+wildDogAdapter = new WildDogAdapter(wildDog)
 
-$hunter = new Hunter();
-$hunter->hunt($wildDogAdapter);
+hunter = new Hunter()
+hunter.hunt(wildDogAdapter)
 ```
 
 🚡 Bridge
@@ -605,67 +529,67 @@ Wikipedia says
 
 Translating our WebPage example from above. Here we have the `WebPage` hierarchy
 
-```php
+```js
 interface WebPage {
-    public function __construct(Theme $theme);
-    public function getContent();
+    constructor(Theme theme)
+    public function getContent()
 }
 
 class About implements WebPage {
-    protected $theme;
+    protected theme
     
-    public function __construct(Theme $theme) {
-        $this->theme = $theme;
+    constructor(Theme theme) {
+        this.theme = theme
     }
     
     public function getContent() {
-        return "About page in " . $this->theme->getColor();
+        return "About page in " . this.theme.getColor()
     }
 }
 
 class Careers implements WebPage {
-   protected $theme;
+   protected theme
    
-   public function __construct(Theme $theme) {
-       $this->theme = $theme;
+   constructor(Theme theme) {
+       this.theme = theme
    }
    
    public function getContent() {
-       return "Careers page in " . $this->theme->getColor();
+       return "Careers page in " . this.theme.getColor()
    } 
 }
 ```
 And the separate theme hierarchy
-```php
+```js
 interface Theme {
-    public function getColor();
+    public function getColor()
 }
 
 class DarkTheme implements Theme {
     public function getColor() {
-        return 'Dark Black';
+        return 'Dark Black'
     }
 }
 class LightTheme implements Theme {
     public function getColor() {
-        return 'Off white';
+        return 'Off white'
     }
 }
 class AquaTheme implements Theme {
     public function getColor() {
-        return 'Light blue';
+        return 'Light blue'
     }
 }
 ```
 And both the hierarchies
-```php
-$darkTheme = new DarkTheme();
+```js
+darkTheme = new DarkTheme()
 
-$about = new About($darkTheme);
-$careers = new Careers($darkTheme);
+about = new About(darkTheme)
+careers = new Careers(darkTheme)
 
-echo $about->getContent(); // "About page in Dark Black";
-echo $careers->getContent(); // "Careers page in Dark Black";
+echo about.getContent() // "About page in Dark Black"
+echo careers.getContent() // "Careers page in Dark Black"
 ```
 
 🌿 Composite
@@ -684,107 +608,107 @@ Wikipedia says
 
 Taking our employees example from above. Here we have different employee types
 
-```php
+```js
 
 interface Employee {
-    public function __construct(string $name, float $salary);
-    public function getName() : string;
-    public function setSalary(float $salary);
-    public function getSalary() : float;
-    public function getRoles()  : array;
+    constructor(string name, float salary)
+    public function getName() : string
+    public function setSalary(float salary)
+    public function getSalary() : float
+    public function getRoles()  : array
 }
 
 class Developer implements Employee {
 
-    protected $salary;
-    protected $name;
+    protected salary
+    protected name
 
-    public function __construct(string $name, float $salary) {
-        $this->name = $name;
-        $this->salary = $salary;
+    constructor(string name, float salary) {
+        this.name = name
+        this.salary = salary
     }
 
     public function getName() : string {
-        return $this->name;
+        return this.name
     }
 
-    public function setSalary(float $salary) {
-        $this->salary = $salary;
+    public function setSalary(float salary) {
+        this.salary = salary
     }
 
     public function getSalary() : float {
-        return $this->salary;
+        return this.salary
     }
 
     public function getRoles() : array {
-        return $this->roles;
+        return this.roles
     }
 }
 
 class Designer implements Employee {
 
-    protected $salary;
-    protected $name;
+    protected salary
+    protected name
 
-    public function __construct(string $name, float $salary) {
-        $this->name = $name;
-        $this->salary = $salary;
+    constructor(string name, float salary) {
+        this.name = name
+        this.salary = salary
     }
 
     public function getName() : string {
-        return $this->name;
+        return this.name
     }
 
-    public function setSalary(float $salary) {
-        $this->salary = $salary;
+    public function setSalary(float salary) {
+        this.salary = salary
     }
 
     public function getSalary() : float {
-        return $this->salary;
+        return this.salary
     }
 
     public function getRoles() : array {
-        return $this->roles;
+        return this.roles
     }
 }
 ```
 
 Then we have an organization which consists of several different types of employees
 
-```php
+```js
 class Organization {
     
-    protected $employees;
+    protected employees
 
-    public function addEmployee(Employee $employee) {
-        $this->employees[] = $employee;
+    public function addEmployee(Employee employee) {
+        this.employees[] = employee
     }
 
     public function getNetSalaries() : float {
-        $netSalary = 0;
+        netSalary = 0
 
-        foreach ($this->employees as $employee) {
-            $netSalary += $employee->getSalary();
+        foreach (this.employees as employee) {
+            netSalary += employee.getSalary()
         }
 
-        return $netSalary;
+        return netSalary
     }
 }
 ```
 
 And then it can be used as
 
-```php
+```js
 // Prepare the employees
-$john = new Developer('John Doe', 12000);
-$jane = new Designer('Jane', 10000);
+john = new Developer('John Doe', 12000)
+jane = new Designer('Jane', 10000)
 
 // Add them to organization
-$organization = new Organization();
-$organization->addEmployee($john);
-$organization->addEmployee($jane);
+organization = new Organization()
+organization.addEmployee(john)
+organization.addEmployee(jane)
 
-echo "Net salaries: " . $organization->getNetSalaries(); // Net Salaries: 22000
+echo "Net salaries: " . organization.getNetSalaries() // Net Salaries: 22000
 ```
 
 ☕ Decorator
@@ -804,73 +728,73 @@ Wikipedia says
 
 Lets take coffee for example. First of all we have a simple coffee implementing the coffee interface
 
-```php
+```js
 interface Coffee {
-    public function getCost();
-    public function getDescription();
+    public function getCost()
+    public function getDescription()
 }
 
 class SimpleCoffee implements Coffee {
 
     public function getCost() {
-        return 10;
+        return 10
     }
 
     public function getDescription() {
-        return 'Simple coffee';
+        return 'Simple coffee'
     }
 }
 ```
 We want to make the code extensible to allow options to modify it if required. Lets make some add-ons (decorators)
-```php
+```js
 class MilkCoffee implements Coffee {
     
-    protected $coffee;
+    protected coffee
 
-    public function __construct(Coffee $coffee) {
-        $this->coffee = $coffee;
+    constructor(Coffee coffee) {
+        this.coffee = coffee
     }
 
     public function getCost() {
-        return $this->coffee->getCost() + 2;
+        return this.coffee.getCost() + 2
     }
 
     public function getDescription() {
-        return $this->coffee->getDescription() . ', milk';
+        return this.coffee.getDescription() . ', milk'
     }
 }
 
 class WhipCoffee implements Coffee {
 
-    protected $coffee;
+    protected coffee
 
-    public function __construct(Coffee $coffee) {
-        $this->coffee = $coffee;
+    constructor(Coffee coffee) {
+        this.coffee = coffee
     }
 
     public function getCost() {
-        return $this->coffee->getCost() + 5;
+        return this.coffee.getCost() + 5
     }
 
     public function getDescription() {
-        return $this->coffee->getDescription() . ', whip';
+        return this.coffee.getDescription() . ', whip'
     }
 }
 
 class VanillaCoffee implements Coffee {
 
-    protected $coffee;
+    protected coffee
 
-    public function __construct(Coffee $coffee) {
-        $this->coffee = $coffee;
+    constructor(Coffee coffee) {
+        this.coffee = coffee
     }
 
     public function getCost() {
-        return $this->coffee->getCost() + 3;
+        return this.coffee.getCost() + 3
     }
 
     public function getDescription() {
-        return $this->coffee->getDescription() . ', vanilla';
+        return this.coffee.getDescription() . ', vanilla'
     }
 }
 
@@ -878,22 +802,22 @@ class VanillaCoffee implements Coffee {
 
 Lets make a coffee now
 
-```php
-$someCoffee = new SimpleCoffee();
-echo $someCoffee->getCost(); // 10
-echo $someCoffee->getDescription(); // Simple Coffee
+```js
+someCoffee = new SimpleCoffee()
+echo someCoffee.getCost() // 10
+echo someCoffee.getDescription() // Simple Coffee
 
-$someCoffee = new MilkCoffee($someCoffee);
-echo $someCoffee->getCost(); // 12
-echo $someCoffee->getDescription(); // Simple Coffee, milk
+someCoffee = new MilkCoffee(someCoffee)
+echo someCoffee.getCost() // 12
+echo someCoffee.getDescription() // Simple Coffee, milk
 
-$someCoffee = new WhipCoffee($someCoffee);
-echo $someCoffee->getCost(); // 17
-echo $someCoffee->getDescription(); // Simple Coffee, milk, whip
+someCoffee = new WhipCoffee(someCoffee)
+echo someCoffee.getCost() // 17
+echo someCoffee.getDescription() // Simple Coffee, milk, whip
 
-$someCoffee = new VanillaCoffee($someCoffee);
-echo $someCoffee->getCost(); // 20
-echo $someCoffee->getDescription(); // Simple Coffee, milk, whip, vanilla
+someCoffee = new VanillaCoffee(someCoffee)
+echo someCoffee.getCost() // 20
+echo someCoffee.getDescription() // Simple Coffee, milk, whip, vanilla
 ```
 
 📦 Facade
@@ -911,67 +835,67 @@ Wikipedia says
 **Programmatic Example**
 Taking our computer example from above. Here we have the computer class
 
-```php
+```js
 class Computer {
 
     public function getElectricShock() {
-        echo "Ouch!";
+        echo "Ouch!"
     }
 
     public function makeSound() {
-        echo "Beep beep!";
+        echo "Beep beep!"
     }
 
     public function showLoadingScreen() {
-        echo "Loading..";
+        echo "Loading.."
     }
 
     public function bam() {
-        echo "Ready to be used!";
+        echo "Ready to be used!"
     }
 
     public function closeEverything() {
-        echo "Bup bup bup buzzzz!";
+        echo "Bup bup bup buzzzz!"
     }
 
     public function sooth() {
-        echo "Zzzzz";
+        echo "Zzzzz"
     }
 
     public function pullCurrent() {
-        echo "Haaah!";
+        echo "Haaah!"
     }
 }
 ```
 Here we have the facade
-```php
+```js
 class ComputerFacade
 {
-    protected $computer;
+    protected computer
 
-    public function __construct(Computer $computer) {
-        $this->computer = $computer;
+    constructor(Computer computer) {
+        this.computer = computer
     }
 
     public function turnOn() {
-        $this->computer->getElectricShock();
-        $this->computer->makeSound();
-        $this->computer->showLoadingScreen();
-        $this->computer->bam();
+        this.computer.getElectricShock()
+        this.computer.makeSound()
+        this.computer.showLoadingScreen()
+        this.computer.bam()
     }
 
     public function turnOff() {
-        $this->computer->closeEverything();
-        $this->computer->pullCurrent();
-        $this->computer->sooth();
+        this.computer.closeEverything()
+        this.computer.pullCurrent()
+        this.computer.sooth()
     }
 }
 ```
 Now to use the facade
-```php
-$computer = new ComputerFacade(new Computer());
-$computer->turnOn(); // Ouch! Beep beep! Loading.. Ready to be used!
-$computer->turnOff(); // Bup bup buzzz! Haah! Zzzzz
+```js
+computer = new ComputerFacade(new Computer())
+computer.turnOn() // Ouch! Beep beep! Loading.. Ready to be used!
+computer.turnOff() // Bup bup buzzz! Haah! Zzzzz
 ```
 
 🍃 Flyweight
@@ -984,12 +908,12 @@ In plain words
 > It is used to minimize memory usage or computational expenses by sharing as much as possible with similar objects.
 
 Wikipedia says
-> In computer programming, flyweight is a software design pattern. A flyweight is an object that minimizes memory use by sharing as much data as possible with other similar objects; it is a way to use objects in large numbers when a simple repeated representation would use an unacceptable amount of memory.
+> In computer programming, flyweight is a software design pattern. A flyweight is an object that minimizes memory use by sharing as much data as possible with other similar objects it is a way to use objects in large numbers when a simple repeated representation would use an unacceptable amount of memory.
 
 **Programmatic example**
 Translating our tea example from above. First of all we have tea types and tea maker
 
-```php
+```js
 // Anything that will be cached is flyweight. 
 // Types of tea here will be flyweights.
 class KarakTea {
@@ -997,52 +921,52 @@ class KarakTea {
 
 // Acts as a factory and saves the tea
 class TeaMaker {
-    protected $availableTea = [];
+    protected availableTea = []
 
-    public function make($preference) {
-        if (empty($this->availableTea[$preference])) {
-            $this->availableTea[$preference] = new KarakTea();
+    public function make(preference) {
+        if (empty(this.availableTea[preference])) {
+            this.availableTea[preference] = new KarakTea()
         }
 
-        return $this->availableTea[$preference];
+        return this.availableTea[preference]
     }
 }
 ```
 
 Then we have the `TeaShop` which takes orders and serves them
 
-```php
+```js
 class TeaShop {
     
-    protected $orders;
-    protected $teaMaker;
+    protected orders
+    protected teaMaker
 
-    public function __construct(TeaMaker $teaMaker) {
-        $this->teaMaker = $teaMaker;
+    constructor(TeaMaker teaMaker) {
+        this.teaMaker = teaMaker
     }
 
-    public function takeOrder(string $teaType, int $table) {
-        $this->orders[$table] = $this->teaMaker->make($teaType);
+    public function takeOrder(string teaType, int table) {
+        this.orders[table] = this.teaMaker.make(teaType)
     }
 
     public function serve() {
-        foreach($this->orders as $table => $tea) {
-            echo "Serving tea to table# " . $table;
+        foreach(this.orders as table => tea) {
+            echo "Serving tea to table# " . table
         }
     }
 }
 ```
 And it can be used as below
 
-```php
-$teaMaker = new TeaMaker();
-$shop = new TeaShop($teaMaker);
+```js
+teaMaker = new TeaMaker()
+shop = new TeaShop(teaMaker)
 
-$shop->takeOrder('less sugar', 1);
-$shop->takeOrder('more milk', 2);
-$shop->takeOrder('without sugar', 5);
+shop.takeOrder('less sugar', 1)
+shop.takeOrder('more milk', 2)
+shop.takeOrder('without sugar', 5)
 
-$shop->serve();
+shop.serve()
 // Serving tea to table# 1
 // Serving tea to table# 2
 // Serving tea to table# 5
@@ -1062,55 +986,55 @@ Wikipedia says
 **Programmatic Example**
 Taking our security door example from above. Firstly we have the door interface and an implementation of door
 
-```php
+```js
 interface Door {
-    public function open();
-    public function close();
+    public function open()
+    public function close()
 }
 
 class LabDoor implements Door {
     public function open() {
-        echo "Opening lab door";
+        echo "Opening lab door"
     }
 
     public function close() {
-        echo "Closing the lab door";
+        echo "Closing the lab door"
     }
 }
 ```
 Then we have a proxy to secure any doors that we want
-```php
+```js
 class Security {
-    protected $door;
+    protected door
 
-    public function __construct(Door $door) {
-        $this->door = $door;
+    constructor(Door door) {
+        this.door = door
     }
 
-    public function open($password) {
-        if ($this->authenticate($password)) {
-            $this->door->open();
+    public function open(password) {
+        if (this.authenticate(password)) {
+            this.door.open()
         } else {
-        	echo "Big no! It ain't possible.";
+        	echo "Big no! It ain't possible."
         }
     }
 
-    public function authenticate($password) {
-        return $password === '$ecr@t'
+    public function authenticate(password) {
+        return password === 'ecr@t'
     }
 
     public function close() {
-        $this->door->close();
+        this.door.close()
     }
 }
 ```
 And here is how it can be used
-```php
-$door = new Security(new LabDoor());
-$door->open('invalid'); // Big no! It ain't possible.
+```js
+door = new Security(new LabDoor())
+door.open('invalid') // Big no! It ain't possible.
 
-$door->open('$ecr@t'); // Opening lab door
-$door->close(); // Closing lab door
+door.open('ecr@t') // Opening lab door
+door.close() // Closing lab door
 ```
 Yet another example would be some sort of data-mapper implementation. For example, I recently made an ODM (Object Data Mapper) for MongoDB using this pattern where I wrote a proxy around mongo classes while utilizing the magic method `__call()`. All the method calls were proxied to the original mongo class and result retrieved was returned as it is but in case of `find` or `findOne` data was mapped to the required class objects and the object was returned instead of `Cursor`.
 
@@ -1138,87 +1062,87 @@ Wikipedia says
 -----------------------
 
 Real world example
-> For example, you have three payment methods (`A`, `B` and `C`) setup in your account; each having a different amount in it. `A` has 100 USD, `B` has 300 USD and `C` having 1000 USD and the preference for payments is chosen as `A` then `B` then `C`. You try to purchase something that is worth 210 USD. Using Chain of Responsibility, first of all account `A` will be checked if it can make the purchase, if yes purchase will be made and the chain will be broken. If not, request will move forward to account `B` checking for amount if yes chain will be broken otherwise the request will keep forwarding till it finds the suitable handler. Here `A`, `B` and `C` are links of the chain and the whole phenomenon is Chain of Responsibility.
+> For example, you have three payment methods (`A`, `B` and `C`) setup in your account each having a different amount in it. `A` has 100 USD, `B` has 300 USD and `C` having 1000 USD and the preference for payments is chosen as `A` then `B` then `C`. You try to purchase something that is worth 210 USD. Using Chain of Responsibility, first of all account `A` will be checked if it can make the purchase, if yes purchase will be made and the chain will be broken. If not, request will move forward to account `B` checking for amount if yes chain will be broken otherwise the request will keep forwarding till it finds the suitable handler. Here `A`, `B` and `C` are links of the chain and the whole phenomenon is Chain of Responsibility.
 
 In plain words
 > It helps building a chain of objects. Request enters from one end and keeps going from object to object till it finds the suitable handler.
 
 Wikipedia says
-> In object-oriented design, the chain-of-responsibility pattern is a design pattern consisting of a source of command objects and a series of processing objects. Each processing object contains logic that defines the types of command objects that it can handle; the rest are passed to the next processing object in the chain.
+> In object-oriented design, the chain-of-responsibility pattern is a design pattern consisting of a source of command objects and a series of processing objects. Each processing object contains logic that defines the types of command objects that it can handle the rest are passed to the next processing object in the chain.
 
 **Programmatic Example**
 
 Translating our account example above. First of all we have a base account having the logic for chaining the accounts together and some accounts
 
-```php
+```js
 abstract class Account {
-    protected $successor;
-    protected $balance;
+    protected successor
+    protected balance
 
-    public function setNext(Account $account) {
-        $this->successor = $account;
+    public function setNext(Account account) {
+        this.successor = account
     }
     
-    public function pay(float $amountToPay) {
-        if ($this->canPay($amountToPay)) {
-            echo sprintf('Paid %s using %s' . PHP_EOL, $amount, get_called_class());
-        } else if ($this->successor) {
-            echo sprintf('Cannot pay using %s. Proceeding ..' . PHP_EOL, get_called_class());
-            $this->successor->pay($amountToPay);
+    public function pay(float amountToPay) {
+        if (this.canPay(amountToPay)) {
+            echo sprintf('Paid %s using %s' . PHP_EOL, amount, get_called_class())
+        } else if (this.successor) {
+            echo sprintf('Cannot pay using %s. Proceeding ..' . PHP_EOL, get_called_class())
+            this.successor.pay(amountToPay)
         } else {
-            throw Exception('None of the accounts have enough balance');
+            throw Exception('None of the accounts have enough balance')
         }
     }
     
-    public function canPay($amount) : bool {
-        return $this->balance <= $amount;
+    public function canPay(amount) : bool {
+        return this.balance <= amount
     }
 }
 
 class Bank extends Account {
-    protected $balance;
+    protected balance
 
-    public function __construct(float $balance) {
-        $this->$balance = $balance;
+    constructor(float balance) {
+        this.balance = balance
     }
 }
 
 class Paypal extends Account {
-    protected $balance;
+    protected balance
 
-    public function __construct(float $balance) {
-        $this->$balance = $balance;
+    constructor(float balance) {
+        this.balance = balance
     }
 }
 
 class Bitcoin extends Account {
-    protected $balance;
+    protected balance
 
-    public function __construct(float $balance) {
-        $this->$balance = $balance;
+    constructor(float balance) {
+        this.balance = balance
     }
 }
 ```
 
 Now let's prepare the chain using the links defined above (i.e. Bank, Paypal, Bitcoin)
 
-```php
+```js
 // Let's prepare a chain like below
-//      $bank->$paypal->$bitcoin
+//      bank.paypal.bitcoin
 //
 // First priority bank
 //      If bank can't pay then paypal
 //      If paypal can't pay then bit coin
 
-$bank = new Bank(100);          // Bank with balance 100
-$paypal = new Paypal(200);      // Paypal with balance 200
-$bitcoin = new Bitcoin(300);    // Bitcoin with balance 300
+bank = new Bank(100)          // Bank with balance 100
+paypal = new Paypal(200)      // Paypal with balance 200
+bitcoin = new Bitcoin(300)    // Bitcoin with balance 300
 
-$bank->setNext($paypal);
-$paypal->setNext($bitcoin);
+bank.setNext(paypal)
+paypal.setNext(bitcoin)
 
 // Let's try to pay using the first priority i.e. bank
-$bank->pay(259);
+bank.pay(259)
 
 // Output will be
 // ==============
@@ -1243,87 +1167,87 @@ Wikipedia says
 **Programmatic Example**
 
 First of all we have the receiver that has the implementation of every action that could be performed
-```php
+```js
 // Receiver
 class Bulb {
     public function turnOn() {
-        echo "Bulb has been lit";
+        echo "Bulb has been lit"
     }
     
     public function turnOff() {
-        echo "Darkness!";
+        echo "Darkness!"
     }
 }
 ```
 then we have an interface that each of the commands are going to implement and then we have a set of commands
-```php
+```js
 interface Command {
-    public function execute();
-    public function undo();
-    public function redo();
+    public function execute()
+    public function undo()
+    public function redo()
 }
 
 // Command
 class TurnOn implements Command {
-    protected $bulb;
+    protected bulb
     
-    public function __construct(Bulb $bulb) {
-        $this->bulb = $bulb;
+    constructor(Bulb bulb) {
+        this.bulb = bulb
     }
     
     public function execute() {
-        $this->bulb->turnOn();
+        this.bulb.turnOn()
     }
     
     public function undo() {
-        $this->bulb->turnOff();
+        this.bulb.turnOff()
     }
     
     public function redo() {
-        $this->execute();
+        this.execute()
     }
 }
 
 class TurnOff implements Command {
-    protected $bulb;
+    protected bulb
     
-    public function __construct(Bulb $bulb) {
-        $this->bulb = $bulb;
+    constructor(Bulb bulb) {
+        this.bulb = bulb
     }
     
     public function execute() {
-        $this->bulb->turnOff();
+        this.bulb.turnOff()
     }
     
     public function undo() {
-        $this->bulb->turnOn();
+        this.bulb.turnOn()
     }
     
     public function redo() {
-        $this->execute();
+        this.execute()
     }
 }
 ```
 Then we have an `Invoker` with whom the client will interact to process any commands
-```php
+```js
 // Invoker
 class RemoteControl {
     
-    public function submit(Command $command) {
-        $command->execute();
+    public function submit(Command command) {
+        command.execute()
     }
 }
 ```
 Finally let's see how we can use it in our client
-```php
-$bulb = new Bulb();
+```js
+bulb = new Bulb()
 
-$turnOn = new TurnOnCommand($bulb);
-$turnOff = new TurnOffCommand($bulb);
+turnOn = new TurnOnCommand(bulb)
+turnOff = new TurnOffCommand(bulb)
 
-$remote = new RemoteControl();
-$remoteControl->submit($turnOn); // Bulb has been lit!
-$remoteControl->submit($turnOff); // Darkness!
+remote = new RemoteControl()
+remoteControl.submit(turnOn) // Bulb has been lit!
+remoteControl.submit(turnOff) // Darkness!
 ```
 
 Command pattern can also be used to implement a transaction based system. Where you keep maintaining the history of commands as soon as you execute them. If the final command is successfully executed, all good otherwise just iterate through the history and keep executing the `undo` on all the executed commands. 
@@ -1338,88 +1262,88 @@ In plain words
 > It presents a way to access the elements of an object without exposing the underlying presentation.
 
 Wikipedia says
-> In object-oriented programming, the iterator pattern is a design pattern in which an iterator is used to traverse a container and access the container's elements. The iterator pattern decouples algorithms from containers; in some cases, algorithms are necessarily container-specific and thus cannot be decoupled.
+> In object-oriented programming, the iterator pattern is a design pattern in which an iterator is used to traverse a container and access the container's elements. The iterator pattern decouples algorithms from containers in some cases, algorithms are necessarily container-specific and thus cannot be decoupled.
 
 **Programmatic example**
 In PHP it is quite easy to implement using SPL (Standard PHP Library). Translating our radio stations example from above. First of all we have `RadioStation`
 
-```php
+```js
 class RadioStation {
-    protected $frequency;
+    protected frequency
 
-    public function __construct(float $frequency) {
-        $this->frequency = $frequency;    
+    constructor(float frequency) {
+        this.frequency = frequency    
     }
     
     public function getFrequency() : float {
-        return $this->frequency;
+        return this.frequency
     }
 }
 ```
 Then we have our iterator
 
-```php
-use Countable;
-use Iterator;
+```js
+use Countable
+use Iterator
 
 class StationList implements Countable, Iterator {
-    /** @var RadioStation[] $stations */
-    protected $stations = [];
+    /** @var RadioStation[] stations */
+    protected stations = []
     
-    /** @var int $counter */
-    protected $counter;
+    /** @var int counter */
+    protected counter
     
-    public function addStation(RadioStation $station) {
-        $this->stations[] = $station;
+    public function addStation(RadioStation station) {
+        this.stations[] = station
     }
     
-    public funtion removeStation(RadioStation $toRemove) {
-        $toRemoveFrequency = $toRemove->getFrequency();
-        $this->stations = array_filter($this->stations, function (RadioStation $station) use ($toRemoveFrequency) {
-            return $station->getFrequency() !== $toRemoveFrequency;
-        });
+    public funtion removeStation(RadioStation toRemove) {
+        toRemoveFrequency = toRemove.getFrequency()
+        this.stations = array_filter(this.stations, function (RadioStation station) use (toRemoveFrequency) {
+            return station.getFrequency() !== toRemoveFrequency
+        })
     }
     
     public function count() : int {
-        return count($this->stations);
+        return count(this.stations)
     }
     
     public function current() : RadioStation {
-        return $this->stations[$this->counter];
+        return this.stations[this.counter]
     }
     
     public function key() {
-        return $this->counter;
+        return this.counter
     }
     
     public function next() {
-        $this->counter++;
+        this.counter++
     }
     
     public function rewind() {
-        $this->counter = 0;
+        this.counter = 0
     }
     
     public function valid(): bool
     {
-        return isset($this->stations[$this->counter]);
+        return isset(this.stations[this.counter])
     }
 }
 ```
 And then it can be used as
-```php
-$stationList = new StationList();
+```js
+stationList = new StationList()
 
-$stationList->addStation(new Station(89));
-$stationList->addStation(new Station(101));
-$stationList->addStation(new Station(102));
-$stationList->addStation(new Station(103.2));
+stationList.addStation(new Station(89))
+stationList.addStation(new Station(101))
+stationList.addStation(new Station(102))
+stationList.addStation(new Station(103.2))
 
-foreach($stationList as $station) {
-    echo $station->getFrequency() . PHP_EOL;
+foreach(stationList as station) {
+    echo station.getFrequency() . PHP_EOL
 }
 
-$stationList->removeStation(new Station(89)); // Will remove station 89
+stationList.removeStation(new Station(89)) // Will remove station 89
 ```
 
 👽 Mediator
@@ -1440,47 +1364,47 @@ Here is the simplest example of a chat room (i.e. mediator) with users (i.e. col
 
 First of all, we have the mediator i.e. the chat room 
 
-```php
+```js
 // Mediator
 class ChatRoom implements ChatRoomMediator {
-    public function showMessage(User $user, string $message) {
-        $time = date('M d, y H:i');
-        $sender = $user->getName();
+    public function showMessage(User user, string message) {
+        time = date('M d, y H:i')
+        sender = user.getName()
 
-        echo $time . '[' . $sender . ']:' . $message;
+        echo time . '[' . sender . ']:' . message
     }
 }
 ```
 
 Then we have our users i.e. colleagues
-```php
+```js
 class User {
-    protected $name;
-    protected $chatMediator;
+    protected name
+    protected chatMediator
 
-    public function __construct(string $name, ChatRoomMediator $chatMediator) {
-        $this->name = $name;
-        $this->chatMediator = $chatMediator;
+    constructor(string name, ChatRoomMediator chatMediator) {
+        this.name = name
+        this.chatMediator = chatMediator
     }
     
     public function getName() {
-        return $this->name;
+        return this.name
     }
     
-    public function send($message) {
-        $this->chatMediator->showMessage($this, $message);
+    public function send(message) {
+        this.chatMediator.showMessage(this, message)
     }
 }
 ```
 And the usage
-```php
-$mediator = new ChatRoom();
+```js
+mediator = new ChatRoom()
 
-$john = new User('John Doe', $mediator);
-$jane = new User('Jane Doe', $mediator);
+john = new User('John Doe', mediator)
+jane = new User('Jane Doe', mediator)
 
-$john->send('Hi there!');
-$jane->send('Hey!');
+john.send('Hi there!')
+jane.send('Hey!')
 
 // Output will be
 // Feb 14, 10:58 [John]: Hi there!
@@ -1506,66 +1430,66 @@ Lets take an example of text editor which keeps saving the state from time to ti
 
 First of all we have our memento object that will be able to hold the editor state
 
-```php
+```js
 class EditorMemento {
-    protected $content;
+    protected content
     
-    public function __construct(string $content) {
-        $this->content = $content;
+    constructor(string content) {
+        this.content = content
     }
     
     public function getContent() {
-        return $this->content;
+        return this.content
     }
 }
 ```
 
 Then we have our editor i.e. originator that is going to use memento object
 
-```php
+```js
 class Editor {
-    protected $content = '';
+    protected content = ''
     
-    public function type(string $words) {
-        $this->content = $this->content . ' ' . $words;
+    public function type(string words) {
+        this.content = this.content . ' ' . words
     }
     
     public function getContent() {
-        return $this->content;
+        return this.content
     }
     
     public function save() {
-        return new EditorMemento($this->content);
+        return new EditorMemento(this.content)
     }
     
-    public function restore(EditorMemento $memento) {
-        $this->content = $memento->getContent();
+    public function restore(EditorMemento memento) {
+        this.content = memento.getContent()
     }
 }
 ```
 
 And then it can be used as 
 
-```php
-$editor = new Editor();
+```js
+editor = new Editor()
 
 // Type some stuff
-$editor->type('This is the first sentence.');
-$editor->type('This is second.');
+editor.type('This is the first sentence.')
+editor.type('This is second.')
 
 // Save the state to restore to : This is the first sentence. This is second.
-$saved = $editor->save();
+saved = editor.save()
 
 // Type some more
-$editor->type('And this is third.');
+editor.type('And this is third.')
 
 // Output: Content before Saving
-echo $editor->getContent(); // This is the first sentence. This is second. And this is third.
+echo editor.getContent() // This is the first sentence. This is second. And this is third.
 
 // Restoring to last saved state
-$editor->restore($saved);
+editor.restore(saved)
 
-$editor->getContent(); // This is the first sentence. This is second.
+editor.getContent() // This is the first sentence. This is second.
 ```
 
 😎 Observer
@@ -1582,66 +1506,66 @@ Wikipedia says
 **Programmatic example**
 
 Translating our example from above. First of all we have job seekers that need to be notified for a job posting
-```php
+```js
 class JobPost {
-    protected $title;
+    protected title
     
-    public function __construct(string $title) {
-        $this->title = $title;
+    constructor(string title) {
+        this.title = title
     }
     
     public function getTitle() {
-        return $this->title;
+        return this.title
     }
 }
 
 class JobSeeker implements Observer {
-    protected $name;
+    protected name
 
-    public function __construct(string $name) {
-        $this->name = $name;
+    constructor(string name) {
+        this.name = name
     }
 
-    public function onJobPosted(JobPost $job) {
+    public function onJobPosted(JobPost job) {
         // Do something with the job posting
-        echo 'Hi ' . $this->name . '! New job posted: '. $job->getTitle();
+        echo 'Hi ' . this.name . '! New job posted: '. job.getTitle()
     }
 }
 ```
 Then we have our job postings to which the job seekers will subscribe
-```php
+```js
 class JobPostings implements Observable {
-    protected $observers = [];
+    protected observers = []
     
-    protected function notify(JobPost $jobPosting) {
-        foreach ($this->observers as $observer) {
-            $observer->onJobPosted($jobPosting);
+    protected function notify(JobPost jobPosting) {
+        foreach (this.observers as observer) {
+            observer.onJobPosted(jobPosting)
         }
     }
     
-    public function attach(Observer $observer) {
-        $this->observers[] = $observer;
+    public function attach(Observer observer) {
+        this.observers[] = observer
     }
     
-    public function addJob(JobPost $jobPosting) {
-        $this->notify($jobPosting);
+    public function addJob(JobPost jobPosting) {
+        this.notify(jobPosting)
     }
 }
 ```
 Then it can be used as
-```php
+```js
 // Create subscribers
-$johnDoe = new JobSeeker('John Doe');
-$janeDoe = new JobSeeker('Jane Doe');
-$kaneDoe = new JobSeeker('Kane Doe');
+johnDoe = new JobSeeker('John Doe')
+janeDoe = new JobSeeker('Jane Doe')
+kaneDoe = new JobSeeker('Kane Doe')
 
 // Create publisher and attach subscribers
-$jobPostings = new JobPostings();
-$jobPostings->attach($johnDoe);
-$jobPostings->attach($janeDoe);
+jobPostings = new JobPostings()
+jobPostings.attach(johnDoe)
+jobPostings.attach(janeDoe)
 
 // Add a new job and see if subscribers get notified
-$jobPostings->addJob(new JobPost('Software Engineer'));
+jobPostings.addJob(new JobPost('Software Engineer'))
 
 // Output
 // Hi John Doe! New job posted: Software Engineer
@@ -1651,7 +1575,7 @@ $jobPostings->addJob(new JobPost('Software Engineer'));
 🏃 Visitor
 -------
 Real world example
-> Consider someone visiting Dubai. They just need a way (i.e. visa) to enter Dubai. After arrival, they can come and visit any place in Dubai on their own without having to ask for permission or to do some leg work in order to visit any place here; just let them know of a place and they can visit it. Visitor pattern let's you do just that, it helps you add places to visit so that they can visit as much as they can without having to do any legwork.
+> Consider someone visiting Dubai. They just need a way (i.e. visa) to enter Dubai. After arrival, they can come and visit any place in Dubai on their own without having to ask for permission or to do some leg work in order to visit any place here just let them know of a place and they can visit it. Visitor pattern let's you do just that, it helps you add places to visit so that they can visit as much as they can without having to do any legwork.
 
 In plain words
 > Visitor pattern let's you add further operations to objects without having to modify them.
@@ -1663,110 +1587,110 @@ Wikipedia says
 
 Let's take an example of a zoo simulation where we have several different kinds of animals and we have to make them Sound. Let's translate this using visitor pattern 
 
-```php
+```js
 // Visitee
 interface Animal {
-    public function accept(AnimalOperation $operation);
+    public function accept(AnimalOperation operation)
 }
 
 // Visitor
 interface AnimalOperation {
-    public function visitMonkey(Monkey $monkey);
-    public function visitLion(Lion $lion);
-    public function visitDolphin(Dolphin $dolphin);
+    public function visitMonkey(Monkey monkey)
+    public function visitLion(Lion lion)
+    public function visitDolphin(Dolphin dolphin)
 }
 ```
 Then we have our implementations for the animals
-```php
+```js
 class Monkey implements Animal {
     
     public function shout() {
-        echo 'Ooh oo aa aa!';
+        echo 'Ooh oo aa aa!'
     }
 
-    public function accept(AnimalOperation $operation) {
-        $operation->visitMonkey($this);
+    public function accept(AnimalOperation operation) {
+        operation.visitMonkey(this)
     }
 }
 
 class Lion implements Animal {
     public function roar() {
-        echo 'Roaaar!';
+        echo 'Roaaar!'
     }
     
-    public function accept(AnimalOperation $operation) {
-        $operation->visitLion($this);
+    public function accept(AnimalOperation operation) {
+        operation.visitLion(this)
     }
 }
 
 class Dolphin implements Animal {
     public function speak() {
-        echo 'Tuut tuttu tuutt!';
+        echo 'Tuut tuttu tuutt!'
     }
     
-    public function accept(AnimalOperation $operation) {
-        $operation->visitDolphin($this);
+    public function accept(AnimalOperation operation) {
+        operation.visitDolphin(this)
     }
 }
 ```
 Let's implement our visitor
-```php
+```js
 class Speak implements AnimalOperation {
-    public function visitMonkey(Monkey $monkey) {
-        $monkey->shout();
+    public function visitMonkey(Monkey monkey) {
+        monkey.shout()
     }
     
-    public function visitLion(Lion $lion) {
-        $lion->roar();
+    public function visitLion(Lion lion) {
+        lion.roar()
     }
     
-    public function visitDolphin(Dolphin $dolphin) {
-        $dolphin->speak();
+    public function visitDolphin(Dolphin dolphin) {
+        dolphin.speak()
     }
 }
 ```
 
 And then it can be used as
-```php
-$monkey = new Monkey();
-$lion = new Lion();
-$dolphin = new Dolphin();
+```js
+monkey = new Monkey()
+lion = new Lion()
+dolphin = new Dolphin()
 
-$speak = new Speak();
+speak = new Speak()
 
-$monkey->accept($speak);    // Ooh oo aa aa!    
-$lion->accept($speak);      // Roaaar!
-$dolphin->accept($speak);   // Tuut tutt tuutt!
+monkey.accept(speak)    // Ooh oo aa aa!    
+lion.accept(speak)      // Roaaar!
+dolphin.accept(speak)   // Tuut tutt tuutt!
 ```
 We could have done this simply by having a inheritance hierarchy for the animals but then we would have to modify the animals whenever we would have to add new actions to animals. But now we will not have to change them. For example, let's say we are asked to add the jump behavior to the animals, we can simply add that by creating a new visitor i.e.
 
-```php
+```js
 class Jump implements AnimalOperation {
-    public function visitMonkey(Monkey $monkey) {
-        echo 'Jumped 20 feet high! on to the tree!';
+    public function visitMonkey(Monkey monkey) {
+        echo 'Jumped 20 feet high! on to the tree!'
     }
     
-    public function visitLion(Lion $lion) {
-        echo 'Jumped 7 feet! Back on the ground!';
+    public function visitLion(Lion lion) {
+        echo 'Jumped 7 feet! Back on the ground!'
     }
     
-    public function visitDolphin(Dolphin $dolphin) {
-        echo 'Walked on water a little and disappeared';
+    public function visitDolphin(Dolphin dolphin) {
+        echo 'Walked on water a little and disappeared'
     }
 }
 ```
 And for the usage
-```php
-$jump = new Jump();
+```js
+jump = new Jump()
 
-$monkey->accept($speak);   // Ooh oo aa aa!
-$monkey->accept($jump);    // Jumped 20 feet high! on to the tree!
+monkey.accept(speak)   // Ooh oo aa aa!
+monkey.accept(jump)    // Jumped 20 feet high! on to the tree!
 
-$lion->accept($speak);     // Roaaar!
-$lion->accept($jump);      // Jumped 7 feet! Back on the ground! 
+lion.accept(speak)     // Roaaar!
+lion.accept(jump)      // Jumped 7 feet! Back on the ground! 
 
-$dolphin->accept($speak);  // Tuut tutt tuutt! 
-$dolphin->accept($jump);   // Walked on water a little and disappeared
+dolphin.accept(speak)  // Tuut tutt tuutt! 
+dolphin.accept(jump)   // Walked on water a little and disappeared
 ```
 
 💡 Strategy
@@ -1785,53 +1709,53 @@ Wikipedia says
 
 Translating our example from above. First of all we have our strategy interface and different strategy implementations
 
-```php
+```js
 interface SortStrategy {
-    public function sort(array $dataset) : array; 
+    public function sort(array dataset) : array 
 }
 
 class BubbleSortStrategy implements SortStrategy {
-    public function sort(array $dataset) : array {
-        echo "Sorting using bubble sort";
+    public function sort(array dataset) : array {
+        echo "Sorting using bubble sort"
          
         // Do sorting
-        return $dataset;
+        return dataset
     }
 } 
 
 class QuickSortStrategy implements SortStrategy {
-    public function sort(array $dataset) : array {
-        echo "Sorting using quick sort";
+    public function sort(array dataset) : array {
+        echo "Sorting using quick sort"
         
         // Do sorting
-        return $dataset;
+        return dataset
     }
 }
 ```
  
 And then we have our client that is going to use any strategy
-```php
+```js
 class Sorter {
-    protected $sorter;
+    protected sorter
     
-    public function __construct(SortStrategy $sorter) {
-        $this->sorter = $sorter;
+    constructor(SortStrategy sorter) {
+        this.sorter = sorter
     }
     
-    public function sort(array $dataset) : array {
-        return $this->sorter->sort($dataset);
+    public function sort(array dataset) : array {
+        return this.sorter.sort(dataset)
     }
 }
 ```
 And it can be used as
-```php
-$dataset = [1, 5, 4, 3, 2, 8];
+```js
+dataset = [1, 5, 4, 3, 2, 8]
 
-$sorter = new Sorter(new BubbleSortStrategy());
-$sorter->sort($dataset); // Output : Sorting using bubble sort
+sorter = new Sorter(new BubbleSortStrategy())
+sorter.sort(dataset) // Output : Sorting using bubble sort
 
-$sorter = new Sorter(new QuickSortStrategy());
-$sorter->sort($dataset); // Output : Sorting using quick sort
+sorter = new Sorter(new QuickSortStrategy())
+sorter.sort(dataset) // Output : Sorting using quick sort
 ```
 
 💢 State
@@ -1852,62 +1776,62 @@ Let's take an example of text editor, it let's you change the state of text that
 
 First of all we have our state interface and some state implementations
 
-```php
+```js
 interface WritingState {
-    public function write(string $words);
+    public function write(string words)
 }
 
 class UpperCase implements WritingState {
-    public function write(string $words) {
-        echo strtoupper($words); 
+    public function write(string words) {
+        echo strtoupper(words) 
     }
 } 
 
 class LowerCase implements WritingState {
-    public function write(string $words) {
-        echo strtolower($words); 
+    public function write(string words) {
+        echo strtolower(words) 
     }
 }
 
 class Default implements WritingState {
-    public function write(string $words) {
-        echo $words;
+    public function write(string words) {
+        echo words
     }
 }
 ```
 Then we have our editor
-```php
+```js
 class TextEditor {
-    protected $state;
+    protected state
     
-    public function __construct(WritingState $state) {
-        $this->state = $state;
+    constructor(WritingState state) {
+        this.state = state
     }
     
-    public function setState(WritingState $state) {
-        $this->state = $state;
+    public function setState(WritingState state) {
+        this.state = state
     }
     
-    public function type(string $words) {
-        $this->state->write($words);
+    public function type(string words) {
+        this.state.write(words)
     }
 }
 ```
 And then it can be used as
-```php
-$editor = new TextEditor(new Default());
+```js
+editor = new TextEditor(new Default())
 
-$editor->type('First line');
+editor.type('First line')
 
-$editor->setState(new UpperCaseState());
+editor.setState(new UpperCaseState())
 
-$editor->type('Second line');
-$editor->type('Third line');
+editor.type('Second line')
+editor.type('Third line')
 
-$editor->setState(new LowerCaseState());
+editor.setState(new LowerCaseState())
 
-$editor->type('Fourth line');
-$editor->type('Fifth line');
+editor.type('Fourth line')
+editor.type('Fifth line')
 
 // Output:
 // First line
@@ -1939,68 +1863,68 @@ Wikipedia says
 Imagine we have a build tool that helps us test, lint, build, generate build reports (i.e. code coverage reports, linting report etc) and deploy our app on the test server.
 
 First of all we have our base class that specifies the skeleton for the build algorithm
-```php
+```js
 abstract class Builder {
     
     // Template method 
     public final function build() {
-        $this->test();
-        $this->lint();
-        $this->assemble();
-        $this->deploy();
+        this.test()
+        this.lint()
+        this.assemble()
+        this.deploy()
     }
     
-    public abstract function test();
-    public abstract function lint();
-    public abstract function build();
-    public abstract function deploy();
+    public abstract function test()
+    public abstract function lint()
+    public abstract function build()
+    public abstract function deploy()
 }
 ```
 
 Then we can have our implementations
 
-```php
+```js
 class AndroidBuilder extends Builder {
     public function test() {
-        echo 'Running android tests';
+        echo 'Running android tests'
     }
     
     public function lint() {
-        echo 'Linting the android code';
+        echo 'Linting the android code'
     }
     
     public function assemble() {
-        echo 'Assembling the android build';
+        echo 'Assembling the android build'
     }
     
     public function deploy() {
-        echo 'Deploying android build to server';
+        echo 'Deploying android build to server'
     }
 }
 
 class IosBuilder extends Builder {
     public function test() {
-        echo 'Running ios tests';
+        echo 'Running ios tests'
     }
     
     public function lint() {
-        echo 'Linting the ios code';
+        echo 'Linting the ios code'
     }
     
     public function assemble() {
-        echo 'Assembling the ios build';
+        echo 'Assembling the ios build'
     }
     
     public function deploy() {
-        echo 'Deploying ios build to server';
+        echo 'Deploying ios build to server'
     }
 }
 ```
 And then it can be used as
 
-```php
-$androidBuilder = new AndroidBuilder();
-$androidBuilder->build();
+```js
+androidBuilder = new AndroidBuilder()
+androidBuilder.build()
 
 // Output:
 // Running android tests
@@ -2008,8 +1932,8 @@ $androidBuilder->build();
 // Assembling the android build
 // Deploying android build to server
 
-$iosBuilder = new IosBuilder();
-$iosBuilder->build();
+iosBuilder = new IosBuilder()
+iosBuilder.build()
 
 // Output:
 // Running ios tests
