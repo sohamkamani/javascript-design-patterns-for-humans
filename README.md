@@ -632,66 +632,69 @@ Wikipedia says
 Taking our employees example from above. Here we have different employee types
 
 ```js
+/*
+Employee interface :
 
-interface Employee {
-    constructor(string name, float salary)
-    public function getName() : string
-    public function setSalary(float salary)
-    public function getSalary() : float
-    public function getRoles()  : array
-}
+constructor(name, salary)
+getName()
+setSalary()
+getSalary()
+getRoles()
+*/
 
-class Developer implements Employee {
+class Developer {
 
-    protected salary
-    protected name
-
-    constructor(string name, float salary) {
+    constructor(name, salary) {
         this.name = name
         this.salary = salary
     }
 
-    public function getName() : string {
+    getName() {
         return this.name
     }
 
-    public function setSalary(float salary) {
+    setSalary(salary) {
         this.salary = salary
     }
 
-    public function getSalary() : float {
+    getSalary() {
         return this.salary
     }
 
-    public function getRoles() : array {
+    getRoles() {
         return this.roles
+    }
+
+    develop() {
+        /* */
     }
 }
 
-class Designer implements Employee {
+class Designer {
 
-    protected salary
-    protected name
-
-    constructor(string name, float salary) {
+    constructor(name, salary) {
         this.name = name
         this.salary = salary
     }
 
-    public function getName() : string {
+    getName() {
         return this.name
     }
 
-    public function setSalary(float salary) {
+    setSalary(salary) {
         this.salary = salary
     }
 
-    public function getSalary() : float {
+    getSalary() {
         return this.salary
     }
 
-    public function getRoles() : array {
+    getRoles() {
         return this.roles
+    }
+
+    design() {
+        /* */
     }
 }
 ```
@@ -700,19 +703,20 @@ Then we have an organization which consists of several different types of employ
 
 ```js
 class Organization {
-    
-    protected employees
-
-    public function addEmployee(Employee employee) {
-        this.employees[] = employee
+    constructor(){
+        this.employees = []
     }
 
-    public function getNetSalaries() : float {
-        netSalary = 0
+    addEmployee(employee) {
+        this.employees.push(employee)
+    }
 
-        foreach (this.employees as employee) {
+    getNetSalaries() {
+        let netSalary = 0
+
+        this.employees.forEach(employee => {
             netSalary += employee.getSalary()
-        }
+        })
 
         return netSalary
     }
@@ -723,15 +727,15 @@ And then it can be used as
 
 ```js
 // Prepare the employees
-john = new Developer('John Doe', 12000)
-jane = new Designer('Jane', 10000)
+const john = new Developer('John Doe', 12000)
+const jane = new Designer('Jane', 10000)
 
 // Add them to organization
-organization = new Organization()
+const organization = new Organization()
 organization.addEmployee(john)
 organization.addEmployee(jane)
 
-echo "Net salaries: " . organization.getNetSalaries() // Net Salaries: 22000
+console.log("Net salaries: " , organization.getNetSalaries()) // Net Salaries: 22000
 ```
 
 ☕ Decorator
