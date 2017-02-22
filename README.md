@@ -756,72 +756,68 @@ Wikipedia says
 Lets take coffee for example. First of all we have a simple coffee implementing the coffee interface
 
 ```js
-interface Coffee {
-    public function getCost()
-    public function getDescription()
-}
+/*
+Coffee interface:
+getCost()
+getDescription()
+*/
 
-class SimpleCoffee implements Coffee {
+class SimpleCoffee{
 
-    public function getCost() {
+    getCost() {
         return 10
     }
 
-    public function getDescription() {
+    getDescription() {
         return 'Simple coffee'
     }
 }
 ```
 We want to make the code extensible to allow options to modify it if required. Lets make some add-ons (decorators)
 ```js
-class MilkCoffee implements Coffee {
-    
-    protected coffee
+class MilkCoffee {
 
-    constructor(Coffee coffee) {
+
+    constructor(coffee) {
         this.coffee = coffee
     }
 
-    public function getCost() {
+    getCost() {
         return this.coffee.getCost() + 2
     }
 
-    public function getDescription() {
-        return this.coffee.getDescription() . ', milk'
+    getDescription() {
+        return this.coffee.getDescription() + ', milk'
     }
 }
 
-class WhipCoffee implements Coffee {
+class WhipCoffee {
 
-    protected coffee
-
-    constructor(Coffee coffee) {
+    constructor(coffee) {
         this.coffee = coffee
     }
 
-    public function getCost() {
+    getCost() {
         return this.coffee.getCost() + 5
     }
 
-    public function getDescription() {
-        return this.coffee.getDescription() . ', whip'
+    getDescription() {
+        return this.coffee.getDescription() + ', whip'
     }
 }
 
-class VanillaCoffee implements Coffee {
+class VanillaCoffee {
 
-    protected coffee
-
-    constructor(Coffee coffee) {
+    constructor(coffee) {
         this.coffee = coffee
     }
 
-    public function getCost() {
+    getCost() {
         return this.coffee.getCost() + 3
     }
 
-    public function getDescription() {
-        return this.coffee.getDescription() . ', vanilla'
+    getDescription() {
+        return this.coffee.getDescription() + ', vanilla'
     }
 }
 
@@ -830,21 +826,23 @@ class VanillaCoffee implements Coffee {
 Lets make a coffee now
 
 ```js
+let someCoffee
+
 someCoffee = new SimpleCoffee()
-echo someCoffee.getCost() // 10
-echo someCoffee.getDescription() // Simple Coffee
+console.log(someCoffee.getCost())// 10
+console.log(someCoffee.getDescription())// Simple Coffee
 
 someCoffee = new MilkCoffee(someCoffee)
-echo someCoffee.getCost() // 12
-echo someCoffee.getDescription() // Simple Coffee, milk
+console.log(someCoffee.getCost())// 12
+console.log(someCoffee.getDescription())// Simple Coffee, milk
 
 someCoffee = new WhipCoffee(someCoffee)
-echo someCoffee.getCost() // 17
-echo someCoffee.getDescription() // Simple Coffee, milk, whip
+console.log(someCoffee.getCost())// 17
+console.log(someCoffee.getDescription())// Simple Coffee, milk, whip
 
 someCoffee = new VanillaCoffee(someCoffee)
-echo someCoffee.getCost() // 20
-echo someCoffee.getDescription() // Simple Coffee, milk, whip, vanilla
+console.log(someCoffee.getCost())// 20
+console.log(someCoffee.getDescription())// Simple Coffee, milk, whip, vanilla
 ```
 
 📦 Facade
@@ -865,31 +863,31 @@ Taking our computer example from above. Here we have the computer class
 ```js
 class Computer {
 
-    public function getElectricShock() {
+    getElectricShock() {
         echo "Ouch!"
     }
 
-    public function makeSound() {
+    makeSound() {
         echo "Beep beep!"
     }
 
-    public function showLoadingScreen() {
+    showLoadingScreen() {
         echo "Loading.."
     }
 
-    public function bam() {
+    bam() {
         echo "Ready to be used!"
     }
 
-    public function closeEverything() {
+    closeEverything() {
         echo "Bup bup bup buzzzz!"
     }
 
-    public function sooth() {
+    sooth() {
         echo "Zzzzz"
     }
 
-    public function pullCurrent() {
+    pullCurrent() {
         echo "Haaah!"
     }
 }
@@ -904,14 +902,14 @@ class ComputerFacade
         this.computer = computer
     }
 
-    public function turnOn() {
+    turnOn() {
         this.computer.getElectricShock()
         this.computer.makeSound()
         this.computer.showLoadingScreen()
         this.computer.bam()
     }
 
-    public function turnOff() {
+    turnOff() {
         this.computer.closeEverything()
         this.computer.pullCurrent()
         this.computer.sooth()
@@ -950,7 +948,7 @@ class KarakTea {
 class TeaMaker {
     protected availableTea = []
 
-    public function make(preference) {
+    make(preference) {
         if (empty(this.availableTea[preference])) {
             this.availableTea[preference] = new KarakTea()
         }
@@ -972,11 +970,11 @@ class TeaShop {
         this.teaMaker = teaMaker
     }
 
-    public function takeOrder(string teaType, int table) {
+    takeOrder(string teaType, int table) {
         this.orders[table] = this.teaMaker.make(teaType)
     }
 
-    public function serve() {
+    serve() {
         foreach(this.orders as table => tea) {
             echo "Serving tea to table# " . table
         }
@@ -1015,16 +1013,16 @@ Taking our security door example from above. Firstly we have the door interface 
 
 ```js
 interface Door {
-    public function open()
-    public function close()
+    open()
+    close()
 }
 
 class LabDoor implements Door {
-    public function open() {
+    open() {
         echo "Opening lab door"
     }
 
-    public function close() {
+    close() {
         echo "Closing the lab door"
     }
 }
@@ -1038,7 +1036,7 @@ class Security {
         this.door = door
     }
 
-    public function open(password) {
+    open(password) {
         if (this.authenticate(password)) {
             this.door.open()
         } else {
@@ -1046,11 +1044,11 @@ class Security {
         }
     }
 
-    public function authenticate(password) {
+    authenticate(password) {
         return password === 'ecr@t'
     }
 
-    public function close() {
+    close() {
         this.door.close()
     }
 }
@@ -1106,11 +1104,11 @@ abstract class Account {
     protected successor
     protected balance
 
-    public function setNext(Account account) {
+    setNext(Account account) {
         this.successor = account
     }
     
-    public function pay(float amountToPay) {
+    pay(float amountToPay) {
         if (this.canPay(amountToPay)) {
             echo sprintf('Paid %s using %s' . PHP_EOL, amount, get_called_class())
         } else if (this.successor) {
@@ -1121,7 +1119,7 @@ abstract class Account {
         }
     }
     
-    public function canPay(amount) : bool {
+    canPay(amount) : bool {
         return this.balance <= amount
     }
 }
@@ -1197,11 +1195,11 @@ First of all we have the receiver that has the implementation of every action th
 ```js
 // Receiver
 class Bulb {
-    public function turnOn() {
+    turnOn() {
         echo "Bulb has been lit"
     }
     
-    public function turnOff() {
+    turnOff() {
         echo "Darkness!"
     }
 }
@@ -1209,9 +1207,9 @@ class Bulb {
 then we have an interface that each of the commands are going to implement and then we have a set of commands
 ```js
 interface Command {
-    public function execute()
-    public function undo()
-    public function redo()
+    execute()
+    undo()
+    redo()
 }
 
 // Command
@@ -1222,15 +1220,15 @@ class TurnOn implements Command {
         this.bulb = bulb
     }
     
-    public function execute() {
+    execute() {
         this.bulb.turnOn()
     }
     
-    public function undo() {
+    undo() {
         this.bulb.turnOff()
     }
     
-    public function redo() {
+    redo() {
         this.execute()
     }
 }
@@ -1242,15 +1240,15 @@ class TurnOff implements Command {
         this.bulb = bulb
     }
     
-    public function execute() {
+    execute() {
         this.bulb.turnOff()
     }
     
-    public function undo() {
+    undo() {
         this.bulb.turnOn()
     }
     
-    public function redo() {
+    redo() {
         this.execute()
     }
 }
@@ -1260,7 +1258,7 @@ Then we have an `Invoker` with whom the client will interact to process any comm
 // Invoker
 class RemoteControl {
     
-    public function submit(Command command) {
+    submit(Command command) {
         command.execute()
     }
 }
@@ -1302,7 +1300,7 @@ class RadioStation {
         this.frequency = frequency    
     }
     
-    public function getFrequency() : float {
+    getFrequency() : float {
         return this.frequency
     }
 }
@@ -1320,7 +1318,7 @@ class StationList implements Countable, Iterator {
     /** @var int counter */
     protected counter
     
-    public function addStation(RadioStation station) {
+    addStation(RadioStation station) {
         this.stations[] = station
     }
     
@@ -1331,27 +1329,27 @@ class StationList implements Countable, Iterator {
         })
     }
     
-    public function count() : int {
+    count() : int {
         return count(this.stations)
     }
     
-    public function current() : RadioStation {
+    current() : RadioStation {
         return this.stations[this.counter]
     }
     
-    public function key() {
+    key() {
         return this.counter
     }
     
-    public function next() {
+    next() {
         this.counter++
     }
     
-    public function rewind() {
+    rewind() {
         this.counter = 0
     }
     
-    public function valid(): bool
+    valid(): bool
     {
         return isset(this.stations[this.counter])
     }
@@ -1394,7 +1392,7 @@ First of all, we have the mediator i.e. the chat room
 ```js
 // Mediator
 class ChatRoom implements ChatRoomMediator {
-    public function showMessage(User user, string message) {
+    showMessage(User user, string message) {
         time = date('M d, y H:i')
         sender = user.getName()
 
@@ -1414,11 +1412,11 @@ class User {
         this.chatMediator = chatMediator
     }
     
-    public function getName() {
+    getName() {
         return this.name
     }
     
-    public function send(message) {
+    send(message) {
         this.chatMediator.showMessage(this, message)
     }
 }
@@ -1465,7 +1463,7 @@ class EditorMemento {
         this.content = content
     }
     
-    public function getContent() {
+    getContent() {
         return this.content
     }
 }
@@ -1477,19 +1475,19 @@ Then we have our editor i.e. originator that is going to use memento object
 class Editor {
     protected content = ''
     
-    public function type(string words) {
+    type(string words) {
         this.content = this.content . ' ' . words
     }
     
-    public function getContent() {
+    getContent() {
         return this.content
     }
     
-    public function save() {
+    save() {
         return new EditorMemento(this.content)
     }
     
-    public function restore(EditorMemento memento) {
+    restore(EditorMemento memento) {
         this.content = memento.getContent()
     }
 }
@@ -1511,7 +1509,7 @@ saved = editor.save()
 editor.type('And this is third.')
 
 // Output: Content before Saving
-echo editor.getContent() // This is the first sentence. This is second. And this is third.
+console.log(editor.getContent())// This is the first sentence. This is second. And this is third.
 
 // Restoring to last saved state
 editor.restore(saved)
@@ -1541,7 +1539,7 @@ class JobPost {
         this.title = title
     }
     
-    public function getTitle() {
+    getTitle() {
         return this.title
     }
 }
@@ -1553,7 +1551,7 @@ class JobSeeker implements Observer {
         this.name = name
     }
 
-    public function onJobPosted(JobPost job) {
+    onJobPosted(JobPost job) {
         // Do something with the job posting
         echo 'Hi ' . this.name . '! New job posted: '. job.getTitle()
     }
@@ -1570,11 +1568,11 @@ class JobPostings implements Observable {
         }
     }
     
-    public function attach(Observer observer) {
+    attach(Observer observer) {
         this.observers[] = observer
     }
     
-    public function addJob(JobPost jobPosting) {
+    addJob(JobPost jobPosting) {
         this.notify(jobPosting)
     }
 }
@@ -1617,45 +1615,45 @@ Let's take an example of a zoo simulation where we have several different kinds 
 ```js
 // Visitee
 interface Animal {
-    public function accept(AnimalOperation operation)
+    accept(AnimalOperation operation)
 }
 
 // Visitor
 interface AnimalOperation {
-    public function visitMonkey(Monkey monkey)
-    public function visitLion(Lion lion)
-    public function visitDolphin(Dolphin dolphin)
+    visitMonkey(Monkey monkey)
+    visitLion(Lion lion)
+    visitDolphin(Dolphin dolphin)
 }
 ```
 Then we have our implementations for the animals
 ```js
 class Monkey implements Animal {
     
-    public function shout() {
+    shout() {
         echo 'Ooh oo aa aa!'
     }
 
-    public function accept(AnimalOperation operation) {
+    accept(AnimalOperation operation) {
         operation.visitMonkey(this)
     }
 }
 
 class Lion implements Animal {
-    public function roar() {
+    roar() {
         echo 'Roaaar!'
     }
     
-    public function accept(AnimalOperation operation) {
+    accept(AnimalOperation operation) {
         operation.visitLion(this)
     }
 }
 
 class Dolphin implements Animal {
-    public function speak() {
+    speak() {
         echo 'Tuut tuttu tuutt!'
     }
     
-    public function accept(AnimalOperation operation) {
+    accept(AnimalOperation operation) {
         operation.visitDolphin(this)
     }
 }
@@ -1663,15 +1661,15 @@ class Dolphin implements Animal {
 Let's implement our visitor
 ```js
 class Speak implements AnimalOperation {
-    public function visitMonkey(Monkey monkey) {
+    visitMonkey(Monkey monkey) {
         monkey.shout()
     }
     
-    public function visitLion(Lion lion) {
+    visitLion(Lion lion) {
         lion.roar()
     }
     
-    public function visitDolphin(Dolphin dolphin) {
+    visitDolphin(Dolphin dolphin) {
         dolphin.speak()
     }
 }
@@ -1693,15 +1691,15 @@ We could have done this simply by having a inheritance hierarchy for the animals
 
 ```js
 class Jump implements AnimalOperation {
-    public function visitMonkey(Monkey monkey) {
+    visitMonkey(Monkey monkey) {
         echo 'Jumped 20 feet high! on to the tree!'
     }
     
-    public function visitLion(Lion lion) {
+    visitLion(Lion lion) {
         echo 'Jumped 7 feet! Back on the ground!'
     }
     
-    public function visitDolphin(Dolphin dolphin) {
+    visitDolphin(Dolphin dolphin) {
         echo 'Walked on water a little and disappeared'
     }
 }
@@ -1738,11 +1736,11 @@ Translating our example from above. First of all we have our strategy interface 
 
 ```js
 interface SortStrategy {
-    public function sort(array dataset) : array 
+    sort(array dataset) : array 
 }
 
 class BubbleSortStrategy implements SortStrategy {
-    public function sort(array dataset) : array {
+    sort(array dataset) : array {
         echo "Sorting using bubble sort"
          
         // Do sorting
@@ -1751,7 +1749,7 @@ class BubbleSortStrategy implements SortStrategy {
 } 
 
 class QuickSortStrategy implements SortStrategy {
-    public function sort(array dataset) : array {
+    sort(array dataset) : array {
         echo "Sorting using quick sort"
         
         // Do sorting
@@ -1769,7 +1767,7 @@ class Sorter {
         this.sorter = sorter
     }
     
-    public function sort(array dataset) : array {
+    sort(array dataset) : array {
         return this.sorter.sort(dataset)
     }
 }
@@ -1805,23 +1803,23 @@ First of all we have our state interface and some state implementations
 
 ```js
 interface WritingState {
-    public function write(string words)
+    write(string words)
 }
 
 class UpperCase implements WritingState {
-    public function write(string words) {
+    write(string words) {
         echo strtoupper(words) 
     }
 } 
 
 class LowerCase implements WritingState {
-    public function write(string words) {
+    write(string words) {
         echo strtolower(words) 
     }
 }
 
 class Default implements WritingState {
-    public function write(string words) {
+    write(string words) {
         echo words
     }
 }
@@ -1835,11 +1833,11 @@ class TextEditor {
         this.state = state
     }
     
-    public function setState(WritingState state) {
+    setState(WritingState state) {
         this.state = state
     }
     
-    public function type(string words) {
+    type(string words) {
         this.state.write(words)
     }
 }
@@ -1912,37 +1910,37 @@ Then we can have our implementations
 
 ```js
 class AndroidBuilder extends Builder {
-    public function test() {
+    test() {
         echo 'Running android tests'
     }
     
-    public function lint() {
+    lint() {
         echo 'Linting the android code'
     }
     
-    public function assemble() {
+    assemble() {
         echo 'Assembling the android build'
     }
     
-    public function deploy() {
+    deploy() {
         echo 'Deploying android build to server'
     }
 }
 
 class IosBuilder extends Builder {
-    public function test() {
+    test() {
         echo 'Running ios tests'
     }
     
-    public function lint() {
+    lint() {
         echo 'Linting the ios code'
     }
     
-    public function assemble() {
+    assemble() {
         echo 'Assembling the ios build'
     }
     
-    public function deploy() {
+    deploy() {
         echo 'Deploying ios build to server'
     }
 }
