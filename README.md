@@ -864,31 +864,31 @@ Taking our computer example from above. Here we have the computer class
 class Computer {
 
     getElectricShock() {
-        echo "Ouch!"
+        console.log('Ouch!')
     }
 
     makeSound() {
-        echo "Beep beep!"
+        console.log('Beep beep!')
     }
 
     showLoadingScreen() {
-        echo "Loading.."
+        console.log('Loading..')
     }
 
     bam() {
-        echo "Ready to be used!"
+        console.log('Ready to be used!')
     }
 
     closeEverything() {
-        echo "Bup bup bup buzzzz!"
+        console.log('Bup bup bup buzzzz!')
     }
 
     sooth() {
-        echo "Zzzzz"
+        console.log('Zzzzz')
     }
 
     pullCurrent() {
-        echo "Haaah!"
+        console.log('Haaah!')
     }
 }
 ```
@@ -896,9 +896,7 @@ Here we have the facade
 ```js
 class ComputerFacade
 {
-    protected computer
-
-    constructor(Computer computer) {
+    constructor(computer) {
         this.computer = computer
     }
 
@@ -918,7 +916,7 @@ class ComputerFacade
 ```
 Now to use the facade
 ```js
-computer = new ComputerFacade(new Computer())
+const computer = new ComputerFacade(new Computer())
 computer.turnOn() // Ouch! Beep beep! Loading.. Ready to be used!
 computer.turnOff() // Bup bup buzzz! Haah! Zzzzz
 ```
@@ -946,13 +944,12 @@ class KarakTea {
 
 // Acts as a factory and saves the tea
 class TeaMaker {
-    protected availableTea = []
+    constructor(){
+        this.availableTea = {}
+    }
 
     make(preference) {
-        if (empty(this.availableTea[preference])) {
-            this.availableTea[preference] = new KarakTea()
-        }
-
+        this.availableTea[preference] = this.availableTea[preference] || (new KarakTea())
         return this.availableTea[preference]
     }
 }
@@ -962,30 +959,27 @@ Then we have the `TeaShop` which takes orders and serves them
 
 ```js
 class TeaShop {
-    
-    protected orders
-    protected teaMaker
-
-    constructor(TeaMaker teaMaker) {
+    constructor(teaMaker) {
         this.teaMaker = teaMaker
+        this.orders = []
     }
 
-    takeOrder(string teaType, int table) {
+    takeOrder(teaType, table) {
         this.orders[table] = this.teaMaker.make(teaType)
     }
 
     serve() {
-        foreach(this.orders as table => tea) {
-            echo "Serving tea to table# " . table
-        }
+        this.orders.forEach((order, index) => {
+            console.log('Serving tea to table#' + index)
+        })
     }
 }
 ```
 And it can be used as below
 
 ```js
-teaMaker = new TeaMaker()
-shop = new TeaShop(teaMaker)
+const teaMaker = new TeaMaker()
+const shop = new TeaShop(teaMaker)
 
 shop.takeOrder('less sugar', 1)
 shop.takeOrder('more milk', 2)
@@ -1976,7 +1970,6 @@ And that about wraps it up. I will continue to improve this, so you might want t
 - Report issues
 - Open pull request with improvements
 - Spread the word
-- Reach out to me directly at kamranahmed.se@gmail.com or [@kamranahmedse](http://twitter.com/kamranahmedse)
 
 ## License
-MIT © [Kamran Ahmed](https://kamranahmed.info)
+MIT © [Soham Kamani](http://sohamkamani.com)
