@@ -377,6 +377,29 @@ const burger = (new BurgerBuilder(14))
     .build()
 ```
 
+__Javascript specific tip__ : When you find that the number of arguments to a function or method are too many (normally any more than 2 arguments is considered too much), use a single object argument instead of multiple arguments. This serves two purposes :
+
+1. It makes your code look less cluttered, since there is only one argument.
+2. You don't have to worry about the order of arguments since arguments are now passed as named properties of the object.
+
+For example : 
+
+```js
+const burger = new Burger({
+    size : 14,
+    pepperoni : true,
+    cheeze : false,
+    lettuce : true,
+    tomato : true
+})
+```
+
+instead of :
+
+```
+const burger = new Burger(14, true, false, true, true)
+```
+
 **When to use?**
 
 When there could be several flavors of an object and to avoid the constructor telescoping. The key difference from the factory pattern is that factory pattern is to be used when the creation is a one step process while builder pattern is to be used when the creation is a multi step process.
@@ -530,66 +553,66 @@ Wikipedia says
 Translating our WebPage example from above. Here we have the `WebPage` hierarchy
 
 ```js
-interface WebPage {
-    constructor(Theme theme)
-    public function getContent()
-}
+/*
+Webpage interface :
 
-class About implements WebPage {
-    protected theme
-    
-    constructor(Theme theme) {
+constructor(theme)
+getContent()
+*/
+
+class About{ 
+    constructor(theme) {
         this.theme = theme
     }
     
-    public function getContent() {
+    getContent() {
         return "About page in " . this.theme.getColor()
     }
 }
 
-class Careers implements WebPage {
-   protected theme
-   
-   constructor(Theme theme) {
+class Careers{
+   constructor(theme) {
        this.theme = theme
    }
    
-   public function getContent() {
+   getContent() {
        return "Careers page in " . this.theme.getColor()
    } 
 }
 ```
 And the separate theme hierarchy
 ```js
-interface Theme {
-    public function getColor()
-}
+/*
+Theme interface :
 
-class DarkTheme implements Theme {
-    public function getColor() {
+getColor()
+*/
+
+class DarkTheme{
+    getColor() {
         return 'Dark Black'
     }
 }
-class LightTheme implements Theme {
-    public function getColor() {
+class LightTheme{
+    getColor() {
         return 'Off white'
     }
 }
-class AquaTheme implements Theme {
-    public function getColor() {
+class AquaTheme{
+    getColor() {
         return 'Light blue'
     }
 }
 ```
 And both the hierarchies
 ```js
-darkTheme = new DarkTheme()
+const darkTheme = new DarkTheme()
 
-about = new About(darkTheme)
-careers = new Careers(darkTheme)
+const about = new About(darkTheme)
+const careers = new Careers(darkTheme)
 
-echo about.getContent() // "About page in Dark Black"
-echo careers.getContent() // "Careers page in Dark Black"
+console.log(about.getContent() )// "About page in Dark Black"
+console.log(careers.getContent() )// "Careers page in Dark Black"
 ```
 
 🌿 Composite
