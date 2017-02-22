@@ -1006,27 +1006,27 @@ Wikipedia says
 Taking our security door example from above. Firstly we have the door interface and an implementation of door
 
 ```js
-interface Door {
-    open()
-    close()
-}
+/*
+Door interface :
 
-class LabDoor implements Door {
+open()
+close()
+*/
+
+class LabDoor {
     open() {
-        echo "Opening lab door"
+        console.log('Opening lab door')
     }
 
     close() {
-        echo "Closing the lab door"
+        console.log('Closing the lab door')
     }
 }
 ```
 Then we have a proxy to secure any doors that we want
 ```js
 class Security {
-    protected door
-
-    constructor(Door door) {
+    constructor(door) {
         this.door = door
     }
 
@@ -1034,7 +1034,7 @@ class Security {
         if (this.authenticate(password)) {
             this.door.open()
         } else {
-        	echo "Big no! It ain't possible."
+        	console.log('Big no! It ain\'t possible.')
         }
     }
 
@@ -1049,7 +1049,7 @@ class Security {
 ```
 And here is how it can be used
 ```js
-door = new Security(new LabDoor())
+const door = new Security(new LabDoor())
 door.open('invalid') // Big no! It ain't possible.
 
 door.open('ecr@t') // Opening lab door
