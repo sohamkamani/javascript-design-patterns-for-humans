@@ -1278,17 +1278,15 @@ Wikipedia says
 > In object-oriented programming, the iterator pattern is a design pattern in which an iterator is used to traverse a container and access the container's elements. The iterator pattern decouples algorithms from containers in some cases, algorithms are necessarily container-specific and thus cannot be decoupled.
 
 **Programmatic example**
-In PHP it is quite easy to implement using SPL (Standard PHP Library). Translating our radio stations example from above. First of all we have `RadioStation`
+ Translating our radio stations example from above. First of all we have `RadioStation`
 
 ```js
 class RadioStation {
-    protected frequency
-
-    constructor(float frequency) {
+    constructor(frequency) {
         this.frequency = frequency    
     }
     
-    getFrequency() : float {
+    getFrequency() {
         return this.frequency
     }
 }
@@ -1296,67 +1294,35 @@ class RadioStation {
 Then we have our iterator
 
 ```js
-use Countable
-use Iterator
+class StationList {
+    constructor(){
+        this.stations = []
+    }
 
-class StationList implements Countable, Iterator {
-    /** @var RadioStation[] stations */
-    protected stations = []
-    
-    /** @var int counter */
-    protected counter
-    
-    addStation(RadioStation station) {
-        this.stations[] = station
+    addStation(station) {
+        this.stations.push(station)
     }
     
-    public funtion removeStation(RadioStation toRemove) {
-        toRemoveFrequency = toRemove.getFrequency()
-        this.stations = array_filter(this.stations, function (RadioStation station) use (toRemoveFrequency) {
+    removeStation(toRemove) {
+        const toRemoveFrequency = toRemove.getFrequency()
+        this.stations = this.stations.filter(station => {
             return station.getFrequency() !== toRemoveFrequency
         })
-    }
-    
-    count() : int {
-        return count(this.stations)
-    }
-    
-    current() : RadioStation {
-        return this.stations[this.counter]
-    }
-    
-    key() {
-        return this.counter
-    }
-    
-    next() {
-        this.counter++
-    }
-    
-    rewind() {
-        this.counter = 0
-    }
-    
-    valid(): bool
-    {
-        return isset(this.stations[this.counter])
     }
 }
 ```
 And then it can be used as
 ```js
-stationList = new StationList()
+const stationList = new StationList()
 
-stationList.addStation(new Station(89))
-stationList.addStation(new Station(101))
-stationList.addStation(new Station(102))
-stationList.addStation(new Station(103.2))
+stationList.addStation(new RadioStation(89))
+stationList.addStation(new RadioStation(101))
+stationList.addStation(new RadioStation(102))
+stationList.addStation(new RadioStation(103.2))
 
-foreach(stationList as station) {
-    echo station.getFrequency() . PHP_EOL
-}
+stationList.stations.forEach(station => console.log(station.getFrequency()))
 
-stationList.removeStation(new Station(89)) // Will remove station 89
+stationList.removeStation(new RadioStation(89)) // Will remove station 89
 ```
 
 👽 Mediator
