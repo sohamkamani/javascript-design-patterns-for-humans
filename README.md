@@ -6,10 +6,13 @@
 </p>
 <p align="center">
 A topic that can easily make anyone's mind wobble. Here I try to make them stick in to your mind (and maybe mine) by explaining them in the <i>simplest</i> way possible. 
+<br/>
+Based on <a href="https://github.com/kamranahmedse/design-patterns-for-humans">"Design patterns for humans"</a>
 </p>
+
 ***
 
-Based on ["Design patterns for humans"](https://github.com/kamranahmedse/design-patterns-for-humans)
+Follow me on [twitter](https://twitter.com/sohamkamani) and check out my [blog](http://sohamkamani.com)
 
 🚀 Introduction
 =================
