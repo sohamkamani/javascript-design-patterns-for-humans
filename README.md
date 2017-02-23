@@ -1651,55 +1651,44 @@ Wikipedia says
  
 **Programmatic example**
 
-Translating our example from above. First of all we have our strategy interface and different strategy implementations
+Translating our example from above, we can easily implement this strategy in javascript using its feature of first class functions.
 
 ```js
-interface SortStrategy {
-    sort(array dataset) : array 
+const bubbleSort = dataset => {
+    console.log('Sorting with bubble sort')
+    // ...
+    // ...
+    return dataset
 }
 
-class BubbleSortStrategy implements SortStrategy {
-    sort(array dataset) : array {
-        echo "Sorting using bubble sort"
-         
-        // Do sorting
-        return dataset
-    }
-} 
-
-class QuickSortStrategy implements SortStrategy {
-    sort(array dataset) : array {
-        echo "Sorting using quick sort"
-        
-        // Do sorting
-        return dataset
-    }
+const quickSort = dataset => {
+    console.log('Sorting with quick sort')
+    // ...
+    // ...
+    return dataset
 }
 ```
  
 And then we have our client that is going to use any strategy
 ```js
-class Sorter {
-    protected sorter
-    
-    constructor(SortStrategy sorter) {
-        this.sorter = sorter
-    }
-    
-    sort(array dataset) : array {
-        return this.sorter.sort(dataset)
+const sorter = dataset => {
+    if(dataset.length > 5){
+        return quickSort
+    } else {
+        return bubbleSort
     }
 }
 ```
 And it can be used as
 ```js
-dataset = [1, 5, 4, 3, 2, 8]
+const longDataSet = [1, 5, 4, 3, 2, 8]
+const shortDataSet = [1, 5, 4]
 
-sorter = new Sorter(new BubbleSortStrategy())
-sorter.sort(dataset) // Output : Sorting using bubble sort
+const sorter1 = sorter(longDataSet)
+const sorter2 = sorter(shortDataSet)
 
-sorter = new Sorter(new QuickSortStrategy())
-sorter.sort(dataset) // Output : Sorting using quick sort
+sorter1(longDataSet) // Output : Sorting with quick sort
+sorter2(shortDataSet) // Output : Sorting with bubble sort
 ```
 
 💢 State
@@ -1718,61 +1707,41 @@ Wikipedia says
 
 Let's take an example of text editor, it let's you change the state of text that is typed i.e. if you have selected bold, it starts writing in bold, if italic then in italics etc.
 
-First of all we have our state interface and some state implementations
+First of all we have our transformation functions
 
 ```js
-interface WritingState {
-    write(string words)
-}
-
-class UpperCase implements WritingState {
-    write(string words) {
-        echo strtoupper(words) 
-    }
-} 
-
-class LowerCase implements WritingState {
-    write(string words) {
-        echo strtolower(words) 
-    }
-}
-
-class Default implements WritingState {
-    write(string words) {
-        echo words
-    }
-}
+const upperCase = inputString => inputString.toUpperCase()
+const lowerCase = inputString => inputString.toLowerCase()
+const defaultTransform = inputString => inputString
 ```
 Then we have our editor
 ```js
 class TextEditor {
-    protected state
-    
-    constructor(WritingState state) {
-        this.state = state
+    constructor(transform) {
+        this._transform = transform
     }
     
-    setState(WritingState state) {
-        this.state = state
+    setTransform(transform) {
+        this._transform = transform
     }
     
-    type(string words) {
-        this.state.write(words)
+    type(words) {
+        console.log(this._transform(words))
     }
 }
 ```
 And then it can be used as
 ```js
-editor = new TextEditor(new Default())
+const editor = new TextEditor(defaultTransform)
 
 editor.type('First line')
 
-editor.setState(new UpperCaseState())
+editor.setTransform(upperCase)
 
 editor.type('Second line')
 editor.type('Third line')
 
-editor.setState(new LowerCaseState())
+editor.setTransform(lowerCase)
 
 editor.type('Fourth line')
 editor.type('Fifth line')
@@ -1808,20 +1777,14 @@ Imagine we have a build tool that helps us test, lint, build, generate build rep
 
 First of all we have our base class that specifies the skeleton for the build algorithm
 ```js
-abstract class Builder {
-    
+class Builder {
     // Template method 
-    public final function build() {
+    build() {
         this.test()
         this.lint()
         this.assemble()
         this.deploy()
     }
-    
-    public abstract function test()
-    public abstract function lint()
-    public abstract function build()
-    public abstract function deploy()
 }
 ```
 
@@ -1830,44 +1793,44 @@ Then we can have our implementations
 ```js
 class AndroidBuilder extends Builder {
     test() {
-        echo 'Running android tests'
+        console.log('Running android tests')
     }
     
     lint() {
-        echo 'Linting the android code'
+        console.log('Linting the android code')
     }
     
     assemble() {
-        echo 'Assembling the android build'
+        console.log('Assembling the android build')
     }
     
     deploy() {
-        echo 'Deploying android build to server'
+        console.log('Deploying android build to server')
     }
 }
 
 class IosBuilder extends Builder {
     test() {
-        echo 'Running ios tests'
+        console.log('Running ios tests')
     }
     
     lint() {
-        echo 'Linting the ios code'
+        console.log('Linting the ios code')
     }
     
     assemble() {
-        echo 'Assembling the ios build'
+        console.log('Assembling the ios build')
     }
     
     deploy() {
-        echo 'Deploying ios build to server'
+        console.log('Deploying ios build to server')
     }
 }
 ```
 And then it can be used as
 
 ```js
-androidBuilder = new AndroidBuilder()
+const androidBuilder = new AndroidBuilder()
 androidBuilder.build()
 
 // Output:
@@ -1876,7 +1839,7 @@ androidBuilder.build()
 // Assembling the android build
 // Deploying android build to server
 
-iosBuilder = new IosBuilder()
+const iosBuilder = new IosBuilder()
 iosBuilder.build()
 
 // Output:
