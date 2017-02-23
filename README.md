@@ -1408,14 +1408,12 @@ First of all we have our memento object that will be able to hold the editor sta
 
 ```js
 class EditorMemento {
-    protected content
-    
-    constructor(string content) {
-        this.content = content
+    constructor(content) {
+        this._content = content
     }
     
     getContent() {
-        return this.content
+        return this._content
     }
 }
 ```
@@ -1424,22 +1422,24 @@ Then we have our editor i.e. originator that is going to use memento object
 
 ```js
 class Editor {
-    protected content = ''
+    constructor(){
+        this._content = ''
+    }
     
-    type(string words) {
-        this.content = this.content . ' ' . words
+    type(words) {
+        this._content = this._content + ' ' + words
     }
     
     getContent() {
-        return this.content
+        return this._content
     }
     
     save() {
-        return new EditorMemento(this.content)
+        return new EditorMemento(this._content)
     }
     
-    restore(EditorMemento memento) {
-        this.content = memento.getContent()
+    restore(memento) {
+        this._content = memento.getContent()
     }
 }
 ```
@@ -1447,14 +1447,14 @@ class Editor {
 And then it can be used as 
 
 ```js
-editor = new Editor()
+const editor = new Editor()
 
 // Type some stuff
 editor.type('This is the first sentence.')
 editor.type('This is second.')
 
 // Save the state to restore to : This is the first sentence. This is second.
-saved = editor.save()
+const saved = editor.save()
 
 // Type some more
 editor.type('And this is third.')
@@ -1465,7 +1465,7 @@ console.log(editor.getContent())// This is the first sentence. This is second. A
 // Restoring to last saved state
 editor.restore(saved)
 
-editor.getContent() // This is the first sentence. This is second.
+console.log(editor.getContent()) // This is the first sentence. This is second.
 ```
 
 😎 Observer
