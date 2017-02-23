@@ -1470,6 +1470,9 @@ console.log(editor.getContent()) // This is the first sentence. This is second.
 
 😎 Observer
 --------
+
+(Otherwise known as _"pub-sub"_)
+
 Real world example
 > A good example would be the job seekers where they subscribe to some job posting site and they are notified whenever there is a matching job opportunity.   
 
@@ -1483,69 +1486,56 @@ Wikipedia says
 
 Translating our example from above. First of all we have job seekers that need to be notified for a job posting
 ```js
-class JobPost {
-    protected title
-    
-    constructor(string title) {
-        this.title = title
-    }
-    
-    getTitle() {
-        return this.title
-    }
-}
+const JobPost = title => ({
+    title: title
+})
 
-class JobSeeker implements Observer {
-    protected name
-
-    constructor(string name) {
-        this.name = name
+class JobSeeker {
+    constructor(name) {
+        this._name = name
     }
 
-    onJobPosted(JobPost job) {
-        // Do something with the job posting
-        echo 'Hi ' . this.name . '! New job posted: '. job.getTitle()
+    notify(jobPost) {
+        console.log(this._name, 'has been notified of a new posting :', jobPost.title)
     }
 }
 ```
 Then we have our job postings to which the job seekers will subscribe
 ```js
-class JobPostings implements Observable {
-    protected observers = []
-    
-    protected function notify(JobPost jobPosting) {
-        foreach (this.observers as observer) {
-            observer.onJobPosted(jobPosting)
-        }
+class JobBoard {
+    constructor() {
+        this._subscribers = []
     }
-    
-    attach(Observer observer) {
-        this.observers[] = observer
+
+    subscribe(jobSeeker) {
+        this._subscribers.push(jobSeeker)
     }
-    
-    addJob(JobPost jobPosting) {
-        this.notify(jobPosting)
+
+    addJob(jobPosting) {
+        this._subscribers.forEach(subscriber => {
+            subscriber.notify(jobPosting)
+        })
     }
 }
 ```
 Then it can be used as
 ```js
 // Create subscribers
-johnDoe = new JobSeeker('John Doe')
-janeDoe = new JobSeeker('Jane Doe')
-kaneDoe = new JobSeeker('Kane Doe')
+const jonDoe = new JobSeeker('John Doe')
+const janeDoe = new JobSeeker('Jane Doe')
+const kaneDoe = new JobSeeker('Kane Doe')
 
 // Create publisher and attach subscribers
-jobPostings = new JobPostings()
-jobPostings.attach(johnDoe)
-jobPostings.attach(janeDoe)
+const jobBoard = new JobBoard()
+jobBoard.subscribe(jonDoe)
+jobBoard.subscribe(janeDoe)
 
 // Add a new job and see if subscribers get notified
-jobPostings.addJob(new JobPost('Software Engineer'))
+jobBoard.addJob(JobPost('Software Engineer'))
 
 // Output
-// Hi John Doe! New job posted: Software Engineer
-// Hi Jane Doe! New job posted: Software Engineer
+// John Doe has been notified of a new posting : Software Engineer
+// Jane Doe has been notified of a new posting : Software Engineer
 ```
 
 🏃 Visitor
@@ -1563,64 +1553,48 @@ Wikipedia says
 
 Let's take an example of a zoo simulation where we have several different kinds of animals and we have to make them Sound. Let's translate this using visitor pattern 
 
+We have our implementations for the animals
 ```js
-// Visitee
-interface Animal {
-    accept(AnimalOperation operation)
-}
-
-// Visitor
-interface AnimalOperation {
-    visitMonkey(Monkey monkey)
-    visitLion(Lion lion)
-    visitDolphin(Dolphin dolphin)
-}
-```
-Then we have our implementations for the animals
-```js
-class Monkey implements Animal {
-    
+class Monkey {
     shout() {
-        echo 'Ooh oo aa aa!'
+        console.log('Ooh oo aa aa!')
     }
 
-    accept(AnimalOperation operation) {
+    accept(operation) {
         operation.visitMonkey(this)
     }
 }
 
-class Lion implements Animal {
+class Lion {
     roar() {
-        echo 'Roaaar!'
+        console.log('Roaaar!')
     }
     
-    accept(AnimalOperation operation) {
+    accept(operation) {
         operation.visitLion(this)
     }
 }
 
-class Dolphin implements Animal {
+class Dolphin {
     speak() {
-        echo 'Tuut tuttu tuutt!'
+        console.log('Tuut tuttu tuutt!')
     }
     
-    accept(AnimalOperation operation) {
+    accept(operation) {
         operation.visitDolphin(this)
     }
 }
 ```
 Let's implement our visitor
 ```js
-class Speak implements AnimalOperation {
-    visitMonkey(Monkey monkey) {
+const speak = {
+    visitMonkey(monkey){
         monkey.shout()
-    }
-    
-    visitLion(Lion lion) {
+    },
+    visitLion(lion){
         lion.roar()
-    }
-    
-    visitDolphin(Dolphin dolphin) {
+    },
+    visitDolphin(dolphin){
         dolphin.speak()
     }
 }
@@ -1628,11 +1602,9 @@ class Speak implements AnimalOperation {
 
 And then it can be used as
 ```js
-monkey = new Monkey()
-lion = new Lion()
-dolphin = new Dolphin()
-
-speak = new Speak()
+const monkey = new Monkey()
+const lion = new Lion()
+const dolphin = new Dolphin()
 
 monkey.accept(speak)    // Ooh oo aa aa!    
 lion.accept(speak)      // Roaaar!
@@ -1641,24 +1613,20 @@ dolphin.accept(speak)   // Tuut tutt tuutt!
 We could have done this simply by having a inheritance hierarchy for the animals but then we would have to modify the animals whenever we would have to add new actions to animals. But now we will not have to change them. For example, let's say we are asked to add the jump behavior to the animals, we can simply add that by creating a new visitor i.e.
 
 ```js
-class Jump implements AnimalOperation {
-    visitMonkey(Monkey monkey) {
-        echo 'Jumped 20 feet high! on to the tree!'
-    }
-    
-    visitLion(Lion lion) {
-        echo 'Jumped 7 feet! Back on the ground!'
-    }
-    
-    visitDolphin(Dolphin dolphin) {
-        echo 'Walked on water a little and disappeared'
+const jump = {
+    visitMonkey(monkey) {
+        console.log('Jumped 20 feet high! on to the tree!')
+    },
+    visitLion(lion) {
+        console.log('Jumped 7 feet! Back on the ground!')
+    },
+    visitDolphin(dolphin) {
+        console.log('Walked on water a little and disappeared')
     }
 }
 ```
 And for the usage
 ```js
-jump = new Jump()
-
 monkey.accept(speak)   // Ooh oo aa aa!
 monkey.accept(jump)    // Jumped 20 feet high! on to the tree!
 
