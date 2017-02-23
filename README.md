@@ -1055,7 +1055,6 @@ door.open('invalid') // Big no! It ain't possible.
 door.open('ecr@t') // Opening lab door
 door.close() // Closing lab door
 ```
-Yet another example would be some sort of data-mapper implementation. For example, I recently made an ODM (Object Data Mapper) for MongoDB using this pattern where I wrote a proxy around mongo classes while utilizing the magic method `__call()`. All the method calls were proxied to the original mongo class and result retrieved was returned as it is but in case of `find` or `findOne` data was mapped to the required class objects and the object was returned instead of `Cursor`.
 
 Behavioral Design Patterns
 ==========================
@@ -1094,50 +1093,48 @@ Wikipedia says
 Translating our account example above. First of all we have a base account having the logic for chaining the accounts together and some accounts
 
 ```js
-abstract class Account {
-    protected successor
-    protected balance
+class Account {
 
-    setNext(Account account) {
+    setNext(account) {
         this.successor = account
     }
     
-    pay(float amountToPay) {
+    pay(amountToPay) {
         if (this.canPay(amountToPay)) {
-            echo sprintf('Paid %s using %s' . PHP_EOL, amount, get_called_class())
+            console.log(`Paid ${amountToPay} using ${this.name}`)
         } else if (this.successor) {
-            echo sprintf('Cannot pay using %s. Proceeding ..' . PHP_EOL, get_called_class())
+            console.log(`Cannot pay using ${this.name}. Proceeding...`)
             this.successor.pay(amountToPay)
         } else {
-            throw Exception('None of the accounts have enough balance')
+            console.log('None of the accounts have enough balance')
         }
     }
     
-    canPay(amount) : bool {
-        return this.balance <= amount
+    canPay(amount) {
+        return this.balance >= amount
     }
 }
 
 class Bank extends Account {
-    protected balance
-
-    constructor(float balance) {
+    constructor(balance) {
+        super()
+        this.name = 'bank'
         this.balance = balance
     }
 }
 
 class Paypal extends Account {
-    protected balance
-
-    constructor(float balance) {
+    constructor(balance) {
+        super()        
+        this.name = 'Paypal'
         this.balance = balance
     }
 }
 
 class Bitcoin extends Account {
-    protected balance
-
-    constructor(float balance) {
+    constructor(balance) {
+        super()        
+        this.name = 'bitcoin'
         this.balance = balance
     }
 }
@@ -1153,9 +1150,9 @@ Now let's prepare the chain using the links defined above (i.e. Bank, Paypal, Bi
 //      If bank can't pay then paypal
 //      If paypal can't pay then bit coin
 
-bank = new Bank(100)          // Bank with balance 100
-paypal = new Paypal(200)      // Paypal with balance 200
-bitcoin = new Bitcoin(300)    // Bitcoin with balance 300
+const bank = new Bank(100)          // Bank with balance 100
+const paypal = new Paypal(200)      // Paypal with balance 200
+const bitcoin = new Bitcoin(300)    // Bitcoin with balance 300
 
 bank.setNext(paypal)
 paypal.setNext(bitcoin)
@@ -1190,27 +1187,27 @@ First of all we have the receiver that has the implementation of every action th
 // Receiver
 class Bulb {
     turnOn() {
-        echo "Bulb has been lit"
+        console.log('Bulb has been lit')
     }
     
     turnOff() {
-        echo "Darkness!"
+        console.log('Darkness!')
     }
 }
 ```
 then we have an interface that each of the commands are going to implement and then we have a set of commands
 ```js
-interface Command {
+/*
+Command interface :
+
     execute()
     undo()
     redo()
-}
+*/
 
 // Command
-class TurnOn implements Command {
-    protected bulb
-    
-    constructor(Bulb bulb) {
+class TurnOnCommand {
+    constructor(bulb) {
         this.bulb = bulb
     }
     
@@ -1227,10 +1224,8 @@ class TurnOn implements Command {
     }
 }
 
-class TurnOff implements Command {
-    protected bulb
-    
-    constructor(Bulb bulb) {
+class TurnOffCommand {
+    constructor(bulb) {
         this.bulb = bulb
     }
     
@@ -1251,22 +1246,21 @@ Then we have an `Invoker` with whom the client will interact to process any comm
 ```js
 // Invoker
 class RemoteControl {
-    
-    submit(Command command) {
+    submit(command) {
         command.execute()
     }
 }
 ```
 Finally let's see how we can use it in our client
 ```js
-bulb = new Bulb()
+const bulb = new Bulb()
 
-turnOn = new TurnOnCommand(bulb)
-turnOff = new TurnOffCommand(bulb)
+const turnOn = new TurnOnCommand(bulb)
+const turnOff = new TurnOffCommand(bulb)
 
-remote = new RemoteControl()
-remoteControl.submit(turnOn) // Bulb has been lit!
-remoteControl.submit(turnOff) // Darkness!
+const remote = new RemoteControl()
+remote.submit(turnOn) // Bulb has been lit!
+remote.submit(turnOff) // Darkness!
 ```
 
 Command pattern can also be used to implement a transaction based system. Where you keep maintaining the history of commands as soon as you execute them. If the final command is successfully executed, all good otherwise just iterate through the history and keep executing the `undo` on all the executed commands. 
@@ -1973,3 +1967,4 @@ And that about wraps it up. I will continue to improve this, so you might want t
 
 ## License
 MIT © [Soham Kamani](http://sohamkamani.com)
+Based on ["Design patterns for humans"] (https://github.com/kamranahmedse/design-patterns-for-humans) Copyright 2017 Kamran Ahmed
