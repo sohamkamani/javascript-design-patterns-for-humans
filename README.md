@@ -1345,12 +1345,12 @@ First of all, we have the mediator i.e. the chat room
 
 ```js
 // Mediator
-class ChatRoom implements ChatRoomMediator {
-    showMessage(User user, string message) {
-        time = date('M d, y H:i')
-        sender = user.getName()
+class ChatRoom {
+    showMessage(user, message) {
+        const time = new Date()
+        const sender = user.getName()
 
-        echo time . '[' . sender . ']:' . message
+        console.log(time + '[' + sender + ']:' + message)
     }
 }
 ```
@@ -1358,10 +1358,7 @@ class ChatRoom implements ChatRoomMediator {
 Then we have our users i.e. colleagues
 ```js
 class User {
-    protected name
-    protected chatMediator
-
-    constructor(string name, ChatRoomMediator chatMediator) {
+    constructor(name, chatMediator) {
         this.name = name
         this.chatMediator = chatMediator
     }
@@ -1377,10 +1374,10 @@ class User {
 ```
 And the usage
 ```js
-mediator = new ChatRoom()
+const mediator = new ChatRoom()
 
-john = new User('John Doe', mediator)
-jane = new User('Jane Doe', mediator)
+const john = new User('John Doe', mediator)
+const jane = new User('Jane Doe', mediator)
 
 john.send('Hi there!')
 jane.send('Hey!')
