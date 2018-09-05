@@ -579,7 +579,7 @@ class About{
     }
     
     getContent() {
-        return "About page in " . this.theme.getColor()
+        return "About page in " + this.theme.getColor()
     }
 }
 
@@ -589,7 +589,7 @@ class Careers{
    }
    
    getContent() {
-       return "Careers page in " . this.theme.getColor()
+       return "Careers page in " + this.theme.getColor()
    } 
 }
 ```
