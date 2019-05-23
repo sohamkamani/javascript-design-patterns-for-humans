@@ -188,7 +188,7 @@ const devManager = new DevelopmentManager()
 devManager.takeInterview() // Output: Asking about design patterns
 
 const marketingManager = new MarketingManager()
-marketingManager.takeInterview() // Output: Asking about community buildng.
+marketingManager.takeInterview() // Output: Asking about community building.
 ```
 
 **When to use?**
