@@ -579,7 +579,7 @@ class About{
     }
     
     getContent() {
-        return "About page in " + this.theme.getColor()
+        return `About page in ${this.theme.getColor()}`
     }
 }
 
@@ -589,7 +589,7 @@ class Careers{
    }
    
    getContent() {
-       return "Careers page in " + this.theme.getColor()
+       return `Careers page in ${this.theme.getColor()}`
    } 
 }
 ```
@@ -800,7 +800,7 @@ class MilkCoffee {
     }
 
     getDescription() {
-        return this.coffee.getDescription() + ', milk'
+        return `${this.coffee.getDescription()}, milk`
     }
 }
 
@@ -815,7 +815,7 @@ class WhipCoffee {
     }
 
     getDescription() {
-        return this.coffee.getDescription() + ', whip'
+        return `${this.coffee.getDescription()}, whip`
     }
 }
 
@@ -830,7 +830,7 @@ class VanillaCoffee {
     }
 
     getDescription() {
-        return this.coffee.getDescription() + ', vanilla'
+        return `${this.coffee.getDescription()}, vanilla`
     }
 }
 
@@ -983,7 +983,7 @@ class TeaShop {
 
     serve() {
         this.orders.forEach((order, index) => {
-            console.log('Serving tea to table#' + index)
+            console.log(`Serving tea to table# ${index}`)
         })
     }
 }
@@ -1363,7 +1363,7 @@ class ChatRoom {
         const time = new Date()
         const sender = user.getName()
 
-        console.log(time + '[' + sender + ']:' + message)
+        console.log(`${time}[${sender}]: ${message}`)
     }
 }
 ```
@@ -1440,7 +1440,7 @@ class Editor {
     }
     
     type(words) {
-        this._content = this._content + ' ' + words
+        this._content += ` ${words}`
     }
     
     getContent() {
