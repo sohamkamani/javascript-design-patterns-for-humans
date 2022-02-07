@@ -188,7 +188,7 @@ const devManager = new DevelopmentManager()
 devManager.takeInterview() // Output: Asking about design patterns
 
 const marketingManager = new MarketingManager()
-marketingManager.takeInterview() // Output: Asking about community buildng.
+marketingManager.takeInterview() // Output: Asking about community building.
 ```
 
 **When to use?**
@@ -417,6 +417,82 @@ const burger = new Burger(14, true, false, true, true)
 
 When there could be several flavors of an object and to avoid the constructor telescoping. The key difference from the factory pattern is that factory pattern is to be used when the creation is a one step process while builder pattern is to be used when the creation is a multi step process.
 
+🐑 Prototype
+------------
+Real world example
+> Remember dolly? The sheep that was cloned! Lets not get into the details but the key point here is that it is all about cloning
+
+In plain words
+> Create object based on an existing object through cloning.
+
+Wikipedia says
+> The prototype pattern is a creational design pattern in software development. It is used when the type of objects to create is determined by a prototypical instance, which is cloned to produce new objects.
+
+In short, it allows you to create a copy of an existing object and modify it to your needs, instead of going through the trouble of creating an object from scratch and setting it up.
+
+**Programmatic Example**
+
+First of all we have our Sheep that we want to clone
+
+```js
+class Sheep {
+    constructor(name, category = "Mountain Sheep") {
+        this.name = name;
+        this.category = category;
+    }
+
+    setName(name) {
+        this.name = name;
+    }
+
+    getName() {
+        console.log(this.name);
+    }
+
+    setCategory(category) {
+        this.category = category;
+    }
+
+    getCategory() {
+        console.log(this.category);
+    }
+}
+```
+
+And then we have a SheepPrototype object that clones objects given a prototype object. Its constructor function accepts a prototype of type Sheep
+
+```js
+class SheepPrototype {
+    constructor(proto) {
+        this.proto = proto;
+    }
+
+    clone() {
+        return new Sheep(this.proto.name, this.proto.category);
+    }
+}
+```
+
+Then it can be cloned like below
+
+```js
+const originalSheep = new Sheep("Jolly");
+originalSheep.getName(); // Jolly
+originalSheep.getCategory(); // Mountain Sheep
+
+// Clone and modify what is required
+const prototype = new SheepPrototype(originalSheep);
+const clonedSheep = prototype.clone();
+clonedSheep.setName("Dolly");
+clonedSheep.getName(); // Dolly
+clonedSheep.getCategory(); // Mountain sheep
+```
+
+This was the classical implementation of the Prototype pattern, but JavaScript can do this far more effectively using its [built-in prototype facility](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes).
+
+**When to use?**
+
+When an object is required that is similar to existing object or when the creation would be expensive as compared to cloning.
 
 💍 Singleton
 ------------
