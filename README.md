@@ -417,6 +417,8 @@ const burger = new Burger(14, true, false, true, true)
 
 When there could be several flavors of an object and to avoid the constructor telescoping. The key difference from the factory pattern is that factory pattern is to be used when the creation is a one step process while builder pattern is to be used when the creation is a multi step process.
 
+[Read more...](https://www.sohamkamani.com/javascript/builder-pattern/)
+
 🐑 Prototype
 ------------
 Real world example
