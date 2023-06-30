@@ -1764,9 +1764,9 @@ And then we have our client that is going to use any strategy
 ```js
 const sorter = dataset => {
     if(dataset.length > 5){
-        return quickSort
+        return quickSort(dataset)
     } else {
-        return bubbleSort
+        return bubbleSort(dataset)
     }
 }
 ```
